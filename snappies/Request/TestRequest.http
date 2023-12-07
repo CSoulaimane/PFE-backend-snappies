@@ -1,0 +1,81 @@
+# Créer un utilisateur avec la méthode POST
+POST http://localhost:8000/commande/create_commande
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "id":"6",  
+  "value": "qsd Admin"
+}
+
+## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+### Update commande by id 
+PUT http://localhost:8000/commande/update_commande/1
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "value": "Commande Updated"
+}
+
+###
+GET http://localhost:8000/commande/getAll
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###
+GET http://localhost:8000/commande/getOne/1
+
+### login an user
+POST http://localhost:8000/login/loginUser
+Content-Type: application/json
+
+{
+    "username": "ronaldo",
+    "password": "aze"
+}
+
+###
+GET http://localhost:8000/login/getAllUsers
+
+
+###
+GET http://localhost:8000/login/get_users_connected
+
+
+### Créer un utilisateur avec la méthode POST
+POST http://localhost:8000/login/create
+Content-Type: application/json
+
+{
+  "username": "admin3",
+  "password": "aze",  
+  "is_admin": true
+}
+
+### delete user
+DELETE http://localhost:8000/login/delete_user/1
+
+###
+POST http://localhost:8000/login/logout/admin3
+Content-Type: application/json
+
+{}
+
+
+### Créer un client 
+POST http://localhost:8000/client/create_client
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "name": "client 4",
+  "numero_telephone": "7787878",  
+  "adresse": "chausse de gand"
+}
+
+### delete client
+DELETE http://localhost:8000/client/delete_client/2
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2

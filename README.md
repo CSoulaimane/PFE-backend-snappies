@@ -14,3 +14,4 @@ install django :
 --> python manage.py runserver  -> lancer l appli
 
 tests
+test dev and prod

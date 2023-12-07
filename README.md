@@ -13,3 +13,4 @@ install django :
 
 --> python manage.py runserver  -> lancer l appli
 
+tets

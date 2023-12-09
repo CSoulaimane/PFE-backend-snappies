@@ -15,3 +15,4 @@ install django :
 
 tests
 test dev and prod
+test run test

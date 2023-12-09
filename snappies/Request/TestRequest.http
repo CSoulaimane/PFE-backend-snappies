@@ -33,7 +33,7 @@ POST http://localhost:8000/login/loginUser
 Content-Type: application/json
 
 {
-    "username": "admin2",
+    "username": "ronaldo",
     "password": "aze"
 }
 
@@ -84,4 +84,26 @@ DELETE http://localhost:8000/client/delete_client/2
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
+
+
+###
+POST http://localhost:8000/tournee/assigner_tournee/2
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+Content-Type: application/json
+
+{
+    "livreur_id": 5
+}
+
+### get all tournee 
+GET http://localhost:8000/tournee/get_all_tournee
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+### get all etapes d'une livreur en mettant l'id de la tournee aquel il est assigne
+GET http://localhost:8000/tournee/get_all_etapes/1
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+### le livreur voit sa tournee
+GET http://localhost:8000/tournee/get_tournee_livreur/3
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 

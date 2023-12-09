@@ -19,7 +19,9 @@ from .views.ClientView import delete_client
 
 from .views.TourneeView import assigner_tournee
 from .views.TourneeView import get_all_tournees
-from .views.TourneeView import get_tournees_livreur
+from .views.TourneeView import get_commandes_tournee
+from .views.TourneeView import get_details_commandes_tournee
+
 
 
 urlpatterns = [
@@ -40,7 +42,8 @@ urlpatterns = [
 
     path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
     path('get_all_tournee', get_all_tournees , name="get all tournee"),
-    path('get_tournee_livreur/<id_livreur>', get_tournees_livreur, name="get_etapes_tournee_livreur"),
+    path('get_commandes_from_tournee/<id_tournee>', get_commandes_tournee, name="get_commandes_tournee"),
+    path('<int:id_tournee>/commandes/details', get_details_commandes_tournee, name='get_details_commandes_tournee'),
 
     ###path('delete/<int:user_id/', delete_user, name='delete_user'),
 

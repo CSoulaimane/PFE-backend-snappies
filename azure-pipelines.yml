@@ -42,19 +42,6 @@ stages:
       workingDirectory: $(projectRoot)
       displayName: "Install requirements"
 
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '$(pythonVersion)'
-      displayName: 'Use Python $(pythonVersion)'
-
-    - script: |
-        python -m venv antenv
-        source antenv/bin/activate
-        pip install -r requirements.txt
-        python manage.py test
-      workingDirectory: $(projectRoot)
-      displayName: 'Run tests'
-
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:

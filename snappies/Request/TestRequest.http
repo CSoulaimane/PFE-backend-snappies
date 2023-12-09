@@ -11,7 +11,7 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
-### Update commande by id 
+### Update commande by id te
 PUT http://localhost:8000/commande/update_commande/1
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2

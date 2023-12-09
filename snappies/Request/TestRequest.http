@@ -4,8 +4,10 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "id":"6",  
-  "value": "qsd Admin"
+  "client": 1,
+  "default": false,
+  "est_modifie": true,
+  "tournee": 1
 }
 
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
@@ -33,7 +35,7 @@ POST http://localhost:8000/login/loginUser
 Content-Type: application/json
 
 {
-    "username": "ronaldo",
+    "username": "admin2",
     "password": "aze"
 }
 

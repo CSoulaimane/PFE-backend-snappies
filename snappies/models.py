@@ -62,3 +62,21 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+class Tournee(models.Model):
+    id_tournee = models.AutoField(primary_key=True)
+    livreur = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    isAdmin = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.livreur.username} - {self.date}"
+    
+class Etapes_tournee(models.Model):
+    id_etape_tournee = models.AutoField(primary_key=True)
+    tournee = models.ForeignKey(Tournee, on_delete=models.CASCADE)  
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.tournee} - {self.commande}"    

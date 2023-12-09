@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 
 from ..models import Commande
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.contrib.auth.decorators import login_required
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +16,8 @@ def get_commande(request, commande_id):
             return HttpResponse(json.dumps(commande_data), content_type='application/json')
         except Commande.DoesNotExist:
             return HttpResponse(status=404)
-
+        
+        
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

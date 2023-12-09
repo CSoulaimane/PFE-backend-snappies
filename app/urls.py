@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('commande/', include(urls)),
     path('login/', include(urls)),
-    path('client/', include(urls))
+    path('client/', include(urls)),
+    path('tournee/', include(urls))
 
 ]

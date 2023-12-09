@@ -11,7 +11,7 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
-### Update commande by id te
+### Update commande by id 
 PUT http://localhost:8000/commande/update_commande/1
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
@@ -33,7 +33,7 @@ POST http://localhost:8000/login/loginUser
 Content-Type: application/json
 
 {
-    "username": "ronaldo",
+    "username": "admin2",
     "password": "aze"
 }
 
@@ -58,11 +58,14 @@ Content-Type: application/json
 ### delete user
 DELETE http://localhost:8000/login/delete_user/1
 
-###
-POST http://localhost:8000/login/logout/admin3
+
+### load user data 
+GET http://localhost:8000/login/loadUserData
+
+### logout
+POST http://localhost:8000/login/logout/0aa1967b91c4c1232cf87c8c6373a035d08255d2
 Content-Type: application/json
 
-{}
 
 
 ### Créer un client 
@@ -79,3 +82,6 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ### delete client
 DELETE http://localhost:8000/client/delete_client/2
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+

@@ -68,7 +68,8 @@ def login(request):
         authenticate_user = authenticate(request, username=username , password=password)
         print(authenticate_user)
         
-       
+        
+
         if authenticate_user is not None:
             # Authentification réussie, maintenant pn appel le login
             auth_login(request, authenticate_user)
@@ -80,20 +81,48 @@ def login(request):
             else:
                 role='livreur'
             
-            return JsonResponse({'message': 'Login is valid', 'role':role , 'token':token.key})
+            request.session['username']= authenticate_user.get_username()
+            print("hey je suis connecte")
+            response_data = {'message': 'Login is valid','username': username , 'role': role, 'token': token.key}
+            
+            if 'username' in request.session:
+                print("Session créée avec succès. Nom d'utilisateur:", request.session['username'])
+            else:
+                print("Échec de la création de la session.")
+
+            return HttpResponse(json.dumps(response_data), content_type="application/json", status=200)
         else:
-            return JsonResponse({'error': 'Invalid credentials'}, status=401)
+            return HttpResponse(json.dumps({'error': 'Invalid credentials'}), content_type="application/json", status=401)
     else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+            return HttpResponse(json.dumps({'error': 'Invalid request method'}), content_type="application/json", status=405)
     
-    
-def logout_user(request, username):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found', 'user not found ':user}, status=404)
 
+def load_user_data(request):
+    if request.user.is_authenticated:
+        user = request.user
+        user_data = {
+            'username': user.username,
+            'role': 'admin' if user.is_admin else 'livreur',  # Adjust this based on your User model
+        }
+        return JsonResponse(user_data)
+    else:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+    
+    
+        
+def logout_user(request):
+  # Récupérer le token à partir de l'URL
+  token = request.path.split('/')[-1]
+
+  # Vérifier si le token est valide
+  if token:
+    # Trouver l'utilisateur associé au token
+    user = User.objects.get(token=token)
+    # Déconnecter l'utilisateur
     logout(request)
-
-    return JsonResponse({'message': f'Logout successful for user: {username}'})
+    # Retourner un message de succès
+    return JsonResponse({'message': f'Déconnexion réussie pour user : {user.username} '})
+  else:
+    # Retourner un message d'erreur
+    return JsonResponse({'error': 'Token invalide'}, status=401)
 

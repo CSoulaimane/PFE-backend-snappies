@@ -9,10 +9,14 @@ from .views.LoginView import login
 from .views.LoginView import getAll
 from .views.LoginView import create_user
 from .views.LoginView import logout_user
+from .views.LoginView import load_user_data
+
 #from .views.LoginView import connected_users
 
 from .views.ClientView import create_client
 from .views.ClientView import delete_client
+
+##from .views.TourneeView import assigner_tournee
 
 
 urlpatterns = [
@@ -24,11 +28,14 @@ urlpatterns = [
     path('loginUser', login , name='login_user'),
     path('getAllUsers', getAll, name='readall'),
     path('create', create_user, name='create_user'),
-    path('logout/<str:username>', logout_user , name="logout"),
+    path('logout/<str:token>', logout_user , name="logout"),
+    path('loadUserData', load_user_data , name="create client"),
     #path('get_users_connected', connected_users , name="get_users_connected"),
     
     path('create_client', create_client , name="create client"),
     path('delete_client/<id_client>', delete_client , name="delete client"),
+
+    #path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
 
     ###path('delete/<int:user_id/', delete_user, name='delete_user'),
 

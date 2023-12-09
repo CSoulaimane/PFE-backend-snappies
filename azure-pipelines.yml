@@ -1,3 +1,25 @@
+trigger:
+- main
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureServiceConnectionId: '4ee463ce-0f24-4f11-8191-390cdef4bf43'
+
+  # Web app name
+  webAppName: 'pfe-backend-souli-dev'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Environment name
+  environmentName: 'pfe-backend-souli-dev'
+
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+
+  # Python version: 3.7
+  pythonVersion: '3.11'
+
 stages:
 - stage: Build
   displayName: Build stage

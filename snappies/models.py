@@ -85,11 +85,12 @@ class Article(models.Model):
     def __str__(self):
         return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types}"
     
+
 class Caisse(models.Model):
     id_caisse = models.AutoField(primary_key=True)
-    
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     nbr_articles = models.IntegerField()
+    test = models.IntegerField(default=0)
 
     def __str__(self):
         return self.id_caisse   
@@ -97,9 +98,9 @@ class Caisse(models.Model):
 class Caisse_commande(models.Model):
     id_caisse_commande = models.AutoField(primary_key=True)
     
-    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
-    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE)
-    nbr_caisse = models.DecimalField(max_digits=5, decimal_places=2)
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
+    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
+    nbr_caisses = models.DecimalField(max_digits=5, decimal_places=2)
     unite = models.IntegerField(default=0)
 
     def __str__(self):

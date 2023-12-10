@@ -68,6 +68,21 @@ def update_commande(request, commande_id):
     
     
 
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def commande_livre(request, commande_id):
+    try:
+        commande = Commande.objects.get(id_commande=commande_id)
+    except Commande.DoesNotExist:
+        return JsonResponse({'error': f'Commande with id {commande_id} does not exist'}, status=404)
+
+    commande.est_livre = True
+    commande.save()
+
+    return JsonResponse({'message': f'Commande {commande_id} marquée comme livrée'})
+
+
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])

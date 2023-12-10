@@ -1,0 +1,31 @@
+# Créer un utilisateur avec la méthode POST
+POST http://localhost:8000/commande/create_commande
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "client": 1,
+  "default": false,
+  "est_modifie": false,
+  "tournee": 1
+}
+
+## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+### Update commande by id 
+PUT http://localhost:8000/commande/update_commande/1
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "value": "Commande Updated"
+}
+
+###
+GET http://localhost:8000/commande/getAll
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###
+GET http://localhost:8000/commande/getOne/1

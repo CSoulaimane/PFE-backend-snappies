@@ -44,7 +44,6 @@ def update_commande(request, commande_id):
             commande = Commande.objects.get(id_commande=commande_id)
             data = json.loads(request.body)
 
-            # Update the fields if present in the request data
             if 'client' in data:
                 commande.client_id = data['client']
             if 'default' in data:
@@ -54,10 +53,8 @@ def update_commande(request, commande_id):
             if 'tournee' in data:
                 commande.tournee_id = data['tournee']
 
-            # Save the updated Commande instance
             commande.save()
 
-            # Return the updated data as a response
             updated_data = {'id_commande': commande.id_commande, 'client': commande.client.name, 'default': commande.default, 'est_modifie': commande.est_modifie, 'tournee': commande.tournee.nom}
             return JsonResponse({'commande': updated_data})
         except Commande.DoesNotExist:
@@ -83,13 +80,10 @@ def create_commande(request):
         est_modifie = data.get('est_modifie')
         tournee_id = data.get('tournee')
 
-        # Création de l'objet Commande avec les données fournies
         commande = Commande(id_commande=id_commande, client_id=client_id, default=default, est_modifie=est_modifie, tournee_id=tournee_id)
 
-        # Enregistrement de la commande dans la base de données
         commande.save()
 
-        # Retourner les données de la commande créée en tant que réponse
         created_data = {'id_commande': commande.id_commande, 'client': commande.client.name, 'default': commande.default, 'est_modifie': commande.est_modifie, 'tournee': commande.tournee.nom}
         return JsonResponse({'commande': created_data})
     else:

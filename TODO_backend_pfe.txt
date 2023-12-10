@@ -1,0 +1,18 @@
+SOULLI : 
+
+
+-->Creer commande ALL ROUTES 
+
+
+--> supprimer commande/client
+--> Ajouter supprimer modifier article
+
+
+BILAL : 
+
+--> Les TOURNEES
+
+--> modifier client
+
+--> declarer si la livraison a ete effectue 
+

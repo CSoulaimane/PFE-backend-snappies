@@ -111,18 +111,12 @@ def load_user_data(request):
     
         
 def logout_user(request):
-  # Récupérer le token à partir de l'URL
   token = request.path.split('/')[-1]
 
-  # Vérifier si le token est valide
   if token:
-    # Trouver l'utilisateur associé au token
     user = User.objects.get(token=token)
-    # Déconnecter l'utilisateur
     logout(request)
-    # Retourner un message de succès
     return JsonResponse({'message': f'Déconnexion réussie pour user : {user.username} '})
   else:
-    # Retourner un message d'erreur
     return JsonResponse({'error': 'Token invalide'}, status=401)
 

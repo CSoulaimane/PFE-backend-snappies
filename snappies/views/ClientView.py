@@ -37,6 +37,30 @@ def delete_client(request, id_client):
     
     
     
-def display_hello_world(request):
-    message = { 'message': 'Hello World!' }
-    return HttpResponse(json.dumps(message))
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_client(request, id_client):
+    try:
+        client = Client.objects.get(id_client=id_client)
+    except Client.DoesNotExist:
+        return JsonResponse({'error': f'Client with id {id_client} does not exist'}, status=404)
+
+    data = json.loads(request.body)
+    
+    if 'name' in data:
+        client.name = data['name']
+    if 'numero_telephone' in data:
+        client.numero_telephone = data['numero_telephone']
+    if 'adresse' in data:
+        client.adresse = data['adresse']
+
+    client.save()
+
+    client_data = {
+        'name': client.name,
+        'numero_telephone': client.numero_telephone,
+        'adresse': client.adresse
+    }
+
+    return HttpResponse(json.dumps(client_data))

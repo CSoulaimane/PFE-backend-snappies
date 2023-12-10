@@ -15,6 +15,7 @@ from .views.LoginView import load_user_data
 
 from .views.ClientView import create_client
 from .views.ClientView import delete_client
+from .views.ClientView import update_client
 
 
 from .views.TourneeView import assigner_tournee
@@ -39,6 +40,7 @@ urlpatterns = [
     
     path('create_client', create_client , name="create client"),
     path('delete_client/<id_client>', delete_client , name="delete client"),
+    path('update_client/<id_client>', update_client , name="update client"),
 
     path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
     path('get_all_tournee', get_all_tournees , name="get all tournee"),

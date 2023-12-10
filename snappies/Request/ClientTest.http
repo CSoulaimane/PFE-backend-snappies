@@ -1,0 +1,25 @@
+### Créer un client 
+POST http://localhost:8000/client/create_client
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "name": "client 2",
+  "numero_telephone": "7787878",  
+  "adresse": "chausse de gand"
+}
+
+### delete client
+DELETE http://localhost:8000/client/delete_client/2
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+### Mettre à jour un client
+PUT http://localhost:8000/client/update_client/1
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "name": "nouveau nom",
+  "numero_telephone": "9999999",  
+  "adresse": "nouvelle adresse"
+}

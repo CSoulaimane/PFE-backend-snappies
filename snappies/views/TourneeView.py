@@ -55,8 +55,7 @@ def assigner_tournee(request, id_tournee):
 @permission_classes([IsAuthenticated])
 def get_tournees_livreur(request, livreur_id):
     try:
-        user = request.user
-        if not user.is_admin:
+        
             livreur = get_object_or_404(User, id_user=livreur_id, is_admin=False)
 
             tournees = Tournee.objects.filter(livreur=livreur)
@@ -68,8 +67,7 @@ def get_tournees_livreur(request, livreur_id):
             } for tournee in tournees]
 
             return HttpResponse(json.dumps(tournees_data), content_type='application/json')
-        else:
-            return JsonResponse({'error': 'Only non-admin users (livreurs) can access this endpoint'})
+        
     except Exception as e:
         return JsonResponse({'error': str(e)})    
 
@@ -80,8 +78,10 @@ def get_tournees_livreur(request, livreur_id):
 def get_commandes_tournee(request, id_tournee):
     try:
         user = request.user
+
+        # Vérifiez si l'utilisateur est un livreur (non-administrateur)
         if not user.is_admin:
-            livreur = user  # Utilisez l'utilisateur authentifié comme livreur
+            livreur = user
 
             # Vérifiez si la tournée appartient au livreur
             tournee = get_object_or_404(Tournee, id_tournee=id_tournee, livreur=livreur)
@@ -99,9 +99,25 @@ def get_commandes_tournee(request, id_tournee):
 
             return HttpResponse(json.dumps(commandes_data), content_type='application/json')
         else:
-            return JsonResponse({'error': 'Only non-admin users (livreurs) can access this endpoint'})
+            # Si l'utilisateur est un administrateur, permettez l'accès à toutes les tournées
+            tournee = get_object_or_404(Tournee, id_tournee=id_tournee)
+
+            # Récupérez toutes les commandes de la tournée
+            commandes_tournee = Commande.objects.filter(tournee=tournee)
+            commandes_data = [{
+                'id_commande': commande.id_commande,
+                'client': commande.client.name,
+                'default': commande.default,
+                'est_modifie': commande.est_modifie,
+                'tournee': id_tournee
+                # Ajoutez d'autres champs de la commande selon vos besoins
+            } for commande in commandes_tournee]
+
+            return HttpResponse(json.dumps(commandes_data), content_type='application/json')
+       
     except Exception as e:
         return JsonResponse({'error': str(e)})
+
     
     
 
@@ -111,8 +127,10 @@ def get_commandes_tournee(request, id_tournee):
 def get_details_commandes_tournee(request, id_tournee):
     try:
         user = request.user
+
+        # Vérifiez si l'utilisateur est un livreur (non-administrateur)
         if not user.is_admin:
-            livreur = user  # Utilisez l'utilisateur authentifié comme livreur
+            livreur = user
 
             # Vérifiez si la tournée appartient au livreur
             tournee = get_object_or_404(Tournee, id_tournee=id_tournee, livreur=livreur)
@@ -125,10 +143,39 @@ def get_details_commandes_tournee(request, id_tournee):
                 articles_commande = [{
                     'id_article': caisse_commande.caisse.article.id_article,
                     'nom_article': caisse_commande.caisse.article.nom,
-                    'nombre_articles' : caisse_commande.caisse.nbr_articles,
+                    'nombre_articles': caisse_commande.caisse.nbr_articles,
+
                     'taille_article': caisse_commande.caisse.article.taille,
                     'quantite_caisse': float(caisse_commande.nbr_caisse),
-                    'quantite_unite':  int(caisse_commande.unite),
+                    'quantite_unite': int(caisse_commande.unite),
+                } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+
+                commande_data = {
+                    'id_commande': commande.id_commande,
+                    'client': commande.client.name,
+                    'default': commande.default,
+                    'est_modifie': commande.est_modifie,
+                    'articles': articles_commande,
+                    # Ajoutez d'autres champs de la commande selon vos besoins
+                }
+
+                commandes_data.append(commande_data)
+        else:
+            # Si l'utilisateur est un administrateur, permettez l'accès à toutes les tournées
+            tournee = get_object_or_404(Tournee, id_tournee=id_tournee)
+
+            # Récupérez toutes les commandes de la tournée avec les détails des articles
+            commandes_tournee = Commande.objects.filter(tournee=tournee)
+            commandes_data = []
+
+            for commande in commandes_tournee:
+                articles_commande = [{
+                    'id_article': caisse_commande.caisse.article.id_article,
+                    'nom_article': caisse_commande.caisse.article.nom,
+                    'nombre_articles': caisse_commande.caisse.nbr_articles,
+                    'taille_article': caisse_commande.caisse.article.taille,
+                    'quantite_caisse': float(caisse_commande.nbr_caisse),
+                    'quantite_unite': int(caisse_commande.unite),
                 } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
 
                 commande_data = {
@@ -142,8 +189,7 @@ def get_details_commandes_tournee(request, id_tournee):
 
                 commandes_data.append(commande_data)
 
-            return HttpResponse(json.dumps(commandes_data), content_type='application/json')
-        else:
-            return JsonResponse({'error': 'Only non-admin users (livreurs) can access this endpoint'})
+        return HttpResponse(json.dumps(commandes_data), content_type='application/json')
     except Exception as e:
         return JsonResponse({'error': str(e)})
+

@@ -12,6 +12,7 @@ from .views.LoginView import getAll
 from .views.LoginView import create_user
 from .views.LoginView import logout_user
 from .views.LoginView import load_user_data
+from .views.LoginView import get_all_livreurs
 
 #from .views.LoginView import connected_users
 
@@ -25,6 +26,10 @@ from .views.TourneeView import get_all_tournees
 from .views.TourneeView import get_commandes_tournee
 from .views.TourneeView import get_details_commandes_tournee
 
+from .views.ArticleView import get_all_articles
+from .views.ArticleView import create_article
+from .views.ArticleView import delete_article
+from .views.ArticleView import update_article
 
 
 urlpatterns = [
@@ -39,6 +44,7 @@ urlpatterns = [
     path('create', create_user, name='create_user'),
     path('logout/<str:token>', logout_user , name="logout"),
     path('loadUserData', load_user_data , name="create client"),
+    path('getAllLivreurs', get_all_livreurs , name="get_all_livreurs"),
     #path('get_users_connected', connected_users , name="get_users_connected"),
     
     path('create_client', create_client , name="create client"),
@@ -49,6 +55,11 @@ urlpatterns = [
     path('get_all_tournee', get_all_tournees , name="get all tournee"),
     path('get_commandes_from_tournee/<id_tournee>', get_commandes_tournee, name="get_commandes_tournee"),
     path('<int:id_tournee>/commandes/details', get_details_commandes_tournee, name='get_details_commandes_tournee'),
+
+    path('get_all_articles',get_all_articles, name ='get all article'),
+    path('create_article',create_article, name ='create article'),
+    path('update_article/<id>',update_article, name ='update article'),
+    path('delete_article/<id>',delete_article, name ='delete article'),
 
     ###path('delete/<int:user_id/', delete_user, name='delete_user'),
 

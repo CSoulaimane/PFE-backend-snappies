@@ -72,7 +72,6 @@ def get_tournees_livreur(request, livreur_id):
             return JsonResponse({'error': 'Only non-admin users (livreurs) can access this endpoint'})
     except Exception as e:
         return JsonResponse({'error': str(e)})    
-        
 
 
 @api_view(['GET'])
@@ -126,6 +125,7 @@ def get_details_commandes_tournee(request, id_tournee):
                 articles_commande = [{
                     'id_article': caisse_commande.caisse.article.id_article,
                     'nom_article': caisse_commande.caisse.article.nom,
+                    'nombre_articles' : caisse_commande.caisse.nbr_articles,
                     'taille_article': caisse_commande.caisse.article.taille,
                     'quantite_caisse': float(caisse_commande.nbr_caisse),
                     'quantite_unite':  int(caisse_commande.unite),

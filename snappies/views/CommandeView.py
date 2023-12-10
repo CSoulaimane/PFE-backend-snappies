@@ -3,11 +3,12 @@
 import json
 from django.http import HttpResponse, JsonResponse
 
-from ..models import Commande
+from ..models import Commande,Tournee,Caisse_commande,Caisse,Article
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.contrib.auth.decorators import login_required
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 def get_commande(request, commande_id):
@@ -75,18 +76,43 @@ def create_commande(request):
     user = request.user
     if user.is_admin:
         data = json.loads(request.body)
-        id_commande = data.get('id_commande')
-        client_id = data.get('client')
-        default = data.get('default')
-        est_modifie = data.get('est_modifie')
-        tournee_id = data.get('tournee')
+        id_client = data["id_client"]
+        articles = data["articles"]
+        id_tournee = data["id_tournee"]
+        
+       
+        clientDejaTournee = Commande.objects.filter(client=id_client)
+        tourneeExistePas = not Tournee.objects.filter(id_tournee=id_tournee)
+        if clientDejaTournee.exists():
+            return Response(status=status.HTTP_409_CONFLICT)
+        if tourneeExistePas.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        commandeDefaut = Commande(tournee=id_tournee,client =id_client,default=True,est_modifie=False,est_livre =False)
+        commandeModifie = Commande(tournee=id_tournee,client =id_client,default=False,est_modifie=False,est_livre =False)
+        print(commandeDefaut)
+        commandeDefaut.save()
+        print(commandeDefaut)
+        commandeModifie.save()
 
-        commande = Commande(id_commande=id_commande, client_id=client_id, default=default, est_modifie=est_modifie, tournee_id=tournee_id)
+        for a in articles:
+            if a["nbr_caisses"] != 0 & a["unite"] != 0:
+                return Response(status= status.HTTP_400_BAD_REQUEST)
+            id_article=a["id_article"]
+            articlesNonExsistant = not Article.objects.filter(id_article=id_article)
+            if articlesNonExsistant:
+                return Response(status= status.HTTP_404_NOT_FOUND)
+            caisse = Caisse.objects.get(article=id_article)
+            if a["nbr_caisses"] != 0 :
+                caisse_commande_defaut = Caisse_commande(caisse=caisse,commande=commandeDefaut.id_commande,nbr_caisses=a["nbr_caisses"],unite=0)
+                caisse_commande_ = Caisse_commande(caisse=caisse,commande=commandeDefaut.id_commande,nbr_caisses=a["nbr_caisses"],unite=0)
 
-        commande.save()
+                caisse_commande_initial.save()
+            elif a["unite"] != 0 :
+                caisse_commande_initial = Caisse_commande(caisse=caisse,commande=commandeDefaut.id_commande,nbr_caisse=0,unite= a["unite"])
+                caisse_commande_initial.save()
 
-        created_data = {'id_commande': commande.id_commande, 'client': commande.client.name, 'default': commande.default, 'est_modifie': commande.est_modifie, 'tournee': commande.tournee.nom}
-        return JsonResponse({'commande': created_data})
+        return JsonResponse({'commande': "re"})
     else:
         return JsonResponse({'error': 'You are not authorized to create a commande'})
     

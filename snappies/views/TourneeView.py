@@ -144,6 +144,7 @@ def get_details_commandes_tournee(request, id_tournee):
                     'id_article': caisse_commande.caisse.article.id_article,
                     'nom_article': caisse_commande.caisse.article.nom,
                     'nombre_articles': caisse_commande.caisse.nbr_articles,
+
                     'taille_article': caisse_commande.caisse.article.taille,
                     'quantite_caisse': float(caisse_commande.nbr_caisse),
                     'quantite_unite': int(caisse_commande.unite),

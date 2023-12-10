@@ -99,7 +99,7 @@ class Caisse_commande(models.Model):
     
     commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
     caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
-    nbr_caisse = models.DecimalField(max_digits=5, decimal_places=2)
+    nbr_caisses = models.DecimalField(max_digits=5, decimal_places=2)
     unite = models.IntegerField(default=0)
 
     def __str__(self):

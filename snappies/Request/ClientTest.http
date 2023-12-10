@@ -4,9 +4,9 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "name": "client 2",
-  "numero_telephone": "7787878",  
-  "adresse": "chausse de gand"
+  "name": "client 3",
+  "numero_telephone": "04214763333",  
+  "adresse": "chausse d'anvers"
 }
 
 ### delete client

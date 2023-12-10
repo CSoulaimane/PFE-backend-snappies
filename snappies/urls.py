@@ -12,6 +12,7 @@ from .views.LoginView import getAll
 from .views.LoginView import create_user
 from .views.LoginView import logout_user
 from .views.LoginView import load_user_data
+from .views.LoginView import get_all_livreurs
 
 #from .views.LoginView import connected_users
 
@@ -39,6 +40,7 @@ urlpatterns = [
     path('create', create_user, name='create_user'),
     path('logout/<str:token>', logout_user , name="logout"),
     path('loadUserData', load_user_data , name="create client"),
+    path('getAllLivreurs', get_all_livreurs , name="get_all_livreurs"),
     #path('get_users_connected', connected_users , name="get_users_connected"),
     
     path('create_client', create_client , name="create client"),

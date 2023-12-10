@@ -6,7 +6,10 @@ from django.contrib.auth import logout
 from rest_framework.authtoken.models import Token
 from django.contrib.sessions.models import Session
 from django.utils import timezone
-
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from ..models import User
 
 # users/views.py
@@ -42,7 +45,21 @@ def delete_user(request, user_id):
             return JsonResponse({'error': f'User with id {user_id} does not exist'}, status=404)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-    
+ 
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_all_livreurs(request):
+    user= request.user
+    if user.is_admin:
+        # Filtrer les utilisateurs qui ne sont pas des administrateurs
+        livreurs = User.objects.filter(is_admin=False)
+        livreurs_data = [{'id_user': livreur.id_user, 'username': livreur.username} for livreur in livreurs]
+        return HttpResponse(json.dumps(livreurs_data), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps({'error': 'Invalid credentials'}), content_type="application/json", status=401)
+
     
 def getAll(request):
     if request.method == 'GET':

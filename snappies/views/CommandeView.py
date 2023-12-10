@@ -89,13 +89,12 @@ def create_commande(request):
     user = request.user
     if user.is_admin:
         data = json.loads(request.body)
-        id_commande = data.get('id_commande')
         client_id = data.get('client')
         default = data.get('default')
         est_modifie = data.get('est_modifie')
         tournee_id = data.get('tournee')
 
-        commande = Commande(id_commande=id_commande, client_id=client_id, default=default, est_modifie=est_modifie, tournee_id=tournee_id)
+        commande = Commande(client_id=client_id, default=default, est_modifie=est_modifie, tournee_id=tournee_id)
 
         commande.save()
 

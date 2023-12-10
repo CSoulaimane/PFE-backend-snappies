@@ -1,0 +1,40 @@
+
+
+### login an user
+POST http://localhost:8000/login/loginUser
+Content-Type: application/json
+
+{
+    "username": "admin2",
+    "password": "aze"
+}
+
+###
+GET http://localhost:8000/login/getAllUsers
+
+
+###
+GET http://localhost:8000/login/get_users_connected
+
+
+### Créer un utilisateur avec la méthode POST
+POST http://localhost:8000/login/create
+Content-Type: application/json
+
+{
+  "username": "admin3",
+  "password": "aze",  
+  "is_admin": true
+}
+
+### delete user
+DELETE http://localhost:8000/login/delete_user/1
+
+
+### load user data 
+GET http://localhost:8000/login/loadUserData
+
+### logout
+POST http://localhost:8000/login/logout/0aa1967b91c4c1232cf87c8c6373a035d08255d2
+Content-Type: application/json
+

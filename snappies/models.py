@@ -85,11 +85,12 @@ class Article(models.Model):
     def __str__(self):
         return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types}"
     
+
 class Caisse(models.Model):
     id_caisse = models.AutoField(primary_key=True)
-    
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     nbr_articles = models.IntegerField()
+    test = models.IntegerField(default=0)
 
     def __str__(self):
         return self.id_caisse   

@@ -98,8 +98,8 @@ class Caisse(models.Model):
 class Caisse_commande(models.Model):
     id_caisse_commande = models.AutoField(primary_key=True)
     
-    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
-    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE)
     nbr_caisses = models.DecimalField(max_digits=5, decimal_places=2)
     unite = models.IntegerField(default=0)
 

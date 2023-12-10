@@ -144,20 +144,20 @@ def create_commande(request):
                 article = Article.objects.get(id_article=id_article)
 
                 if a["nbr_caisses"] != 0 :
-                    caisse_commande_defaut = Caisse_commande(caisse=caisse,commande=commandeDefaut,nbr_caisse=a["nbr_caisses"],unite=0)
-                    caisse_commande_modifie = Caisse_commande(caisse=caisse,commande=commandeModifie,nbr_caisse=a["nbr_caisses"],unite=0)
+                    caisse_commande_defaut = Caisse_commande(caisse=caisse,commande=commandeDefaut,nbr_caisses=a["nbr_caisses"],unite=0)
+                    caisse_commande_modifie = Caisse_commande(caisse=caisse,commande=commandeModifie,nbr_caisses=a["nbr_caisses"],unite=0)
                     caisse_commande_modifie.save()
                     caisse_commande_defaut.save()
                     tab_articles.append({"id_article":id_article,"type" : article.types,"taille": article.taille ,
-                                        "nbr_articles":caisse.nbr_articles,"nbr_caisses":caisse_commande_defaut.nbr_caisse,"unite":caisse_commande_defaut.unite })
+                                        "nbr_articles":caisse.nbr_articles,"nbr_caisses":caisse_commande_defaut.nbr_caisses,"unite":caisse_commande_defaut.unite })
 
                 elif a["unite"] != 0 :
-                    caisse_commande_defaut = Caisse_commande(caisse=caisse,commande=commandeDefaut,nbr_caisse=0,unite= a["unite"])
-                    caisse_commande_modifie = Caisse_commande(caisse=caisse,commande=commandeModifie,nbr_caisse=0,unite= a["unite"])
+                    caisse_commande_defaut = Caisse_commande(caisse=caisse,commande=commandeDefaut,nbr_caisses=0,unite= a["unite"])
+                    caisse_commande_modifie = Caisse_commande(caisse=caisse,commande=commandeModifie,nbr_caisses=0,unite= a["unite"])
                     caisse_commande_modifie.save()
                     caisse_commande_defaut.save()
                     tab_articles.append({"id_article":id_article,"type" : article.types,"taille": article.taille ,
-                                        "nbr_articles":caisse.nbr_articles,"nbr_caisses":caisse_commande_defaut.nbr_caisse,"unite":caisse_commande_defaut.unite })
+                                        "nbr_articles":caisse.nbr_articles,"nbr_caisses":caisse_commande_defaut.nbr_caisses,"unite":caisse_commande_defaut.unite })
 
 
 

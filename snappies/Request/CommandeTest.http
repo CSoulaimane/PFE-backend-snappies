@@ -46,6 +46,25 @@ GET http://localhost:8000/commande/getAll
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
+### get all commandes pour un admin
+GET http://localhost:8000/commande/get_admin_commandes
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+## token ronaldo : 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+### get All commandes pour un livreur
+GET http://localhost:8000/commande/get_livreur_commandes
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+
+
+
+
+
+
+
+
 ###
 GET http://localhost:8000/commande/getOne/1
 

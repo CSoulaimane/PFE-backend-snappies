@@ -5,6 +5,8 @@ from .views.CommandeView import get_commande
 from .views.CommandeView import get_commandes
 from .views.CommandeView import update_commande
 from .views.CommandeView import commande_livre
+from .views.CommandeView import get_admin_commandes
+from .views.CommandeView import get_livreur_commandes
 
 
 from .views.LoginView import login
@@ -38,6 +40,8 @@ urlpatterns = [
     path('create_commande', create_commande, name='create_commande'),
     path('update_commande/<commande_id>', update_commande, name='update_commande'),
     path('commande_livre/<commande_id>', commande_livre, name='commande livre'),
+    path('get_admin_commandes', get_admin_commandes, name='get_admin_commandes'),
+    path('get_livreur_commandes', get_livreur_commandes, name='get_livreur_commandes'),
 
     path('loginUser', login , name='login_user'),
     path('getAllUsers', getAll, name='readall'),

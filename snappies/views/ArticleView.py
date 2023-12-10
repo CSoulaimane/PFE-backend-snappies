@@ -19,7 +19,7 @@ def get_all_articles(request):
         if user.is_admin:
             caisses = Caisse.objects.all()
             print("test")
-            tournees_data = [{ 'id_caisse': c.id_caisse,'id_article': c.article.id_article, 'nom': c.article.nom ,'taille': c.article.taille,
+            tournees_data = [{ 'id_caisse': c.id_caisse,'article': c.article.id_article, 'nom': c.article.nom ,'taille': c.article.taille,
                                'type': c.article.types, 'nbr_articles': c.nbr_articles } for c in caisses]
             return HttpResponse(json.dumps(tournees_data), content_type='application/json')
         else:

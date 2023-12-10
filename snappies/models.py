@@ -74,7 +74,7 @@ class Commande(models.Model):
     est_livre = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.id_commande
+        return   f"commande : {self.id_commande}"  
 
 class Article(models.Model):
     id_article = models.AutoField(primary_key=True)
@@ -97,8 +97,8 @@ class Caisse(models.Model):
 class Caisse_commande(models.Model):
     id_caisse_commande = models.AutoField(primary_key=True)
     
-    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
-    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE)
     nbr_caisse = models.DecimalField(max_digits=5, decimal_places=2)
     unite = models.IntegerField(default=0)
 

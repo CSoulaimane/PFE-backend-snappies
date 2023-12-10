@@ -1,0 +1,33 @@
+# test articles
+
+### get all articles
+GET http://localhost:8000/articles/get_all_articles
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+### Créer un artcile 
+POST http://localhost:8000/articles/create_article
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "nom": "souli ffffdddd",
+  "type": "U",
+  "nbr_articles" : 0
+}
+
+### delete all articles
+DELETE  http://localhost:8000/articles/delete_article/455445
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+### Créer un artcile 
+PATCH  http://localhost:8000/articles/update_article/1
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "nom": "lange update",
+  "nbr_articles": 45
+}
+ 

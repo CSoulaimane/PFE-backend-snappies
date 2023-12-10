@@ -25,6 +25,7 @@ def get_commande(request, commande_id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_commandes(request):
+
     user = request.user
     if user.is_admin:
         commandes = Commande.objects.all()

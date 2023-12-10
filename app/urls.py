@@ -23,6 +23,6 @@ urlpatterns = [
     path('commande/', include(urls)),
     path('login/', include(urls)),
     path('client/', include(urls)),
-    path('tournee/', include(urls))
-
+    path('tournee/', include(urls)),
+    path('articles/', include(urls))
 ]

@@ -4,8 +4,10 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "id":"6",  
-  "value": "qsd Admin"
+  "client": 1,
+  "default": false,
+  "est_modifie": false,
+  "tournee": 1
 }
 
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
@@ -74,7 +76,7 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "name": "client 4",
+  "name": "client 2",
   "numero_telephone": "7787878",  
   "adresse": "chausse de gand"
 }
@@ -85,3 +87,35 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
 
+
+### assigner la tournee 2 a Ronaldo (id = 5)
+POST http://localhost:8000/tournee/assigner_tournee/2
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+Content-Type: application/json
+
+{
+    "livreur_id": 5
+}
+
+### get all tournee 
+GET http://localhost:8000/tournee/get_all_tournee
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+### get all etapes d'une livreur en mettant l'id de la tournee aquel il est assigne
+GET http://localhost:8000/tournee/get_all_etapes/1
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+### le livreur voit sa tournee
+GET http://localhost:8000/tournee/get_tournee_livreur/1
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+
+### renvoi les commandes d'une tournee specifique 
+GET http://localhost:8000/tournee/get_commandes_from_tournee/1
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
+
+//tournees/<int:id_tournee>/commandes/details
+
+### renvoi la liste des caisses dans la commande de la tournee 1
+GET http://localhost:8000/tournees/1/commandes/details
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771

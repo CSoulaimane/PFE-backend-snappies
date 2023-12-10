@@ -16,7 +16,12 @@ from .views.LoginView import load_user_data
 from .views.ClientView import create_client
 from .views.ClientView import delete_client
 
-##from .views.TourneeView import assigner_tournee
+
+from .views.TourneeView import assigner_tournee
+from .views.TourneeView import get_all_tournees
+from .views.TourneeView import get_commandes_tournee
+from .views.TourneeView import get_details_commandes_tournee
+
 
 
 urlpatterns = [
@@ -35,7 +40,10 @@ urlpatterns = [
     path('create_client', create_client , name="create client"),
     path('delete_client/<id_client>', delete_client , name="delete client"),
 
-    #path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
+    path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
+    path('get_all_tournee', get_all_tournees , name="get all tournee"),
+    path('get_commandes_from_tournee/<id_tournee>', get_commandes_tournee, name="get_commandes_tournee"),
+    path('<int:id_tournee>/commandes/details', get_details_commandes_tournee, name='get_details_commandes_tournee'),
 
     ###path('delete/<int:user_id/', delete_user, name='delete_user'),
 

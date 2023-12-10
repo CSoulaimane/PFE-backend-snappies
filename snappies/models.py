@@ -5,13 +5,6 @@ from rest_framework.authtoken.models import Token
 
 # Create your models here.
 
-class Commande(models.Model):
-    id = models.CharField(max_length=50, primary_key=True)
-    value = models.CharField(max_length=100)
-
-
-    def __str__(self):
-        return self.value
     
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -65,18 +58,48 @@ class Client(models.Model):
     
     
 class Tournee(models.Model):
-    id_tournee = models.AutoField(primary_key=True)
+    id_tournee = models.AutoField(primary_key=True )
     livreur = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-    isAdmin = models.BooleanField(default=False)
+    nom = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return f"{self.livreur.username}"
+
+
+class Commande(models.Model):
+    id_commande = models.AutoField(max_length=50, primary_key=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    default = models.BooleanField(default=False)
+    est_modifie = models.BooleanField(default=False)
+    tournee = models.ForeignKey(Tournee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.livreur.username} - {self.date}"
+        return self.id_commande
+
+class Article(models.Model):
+    id_article = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=255 )
+    taille = models.CharField(max_length=1, choices=[('S', 'Small'), ('M' , 'Medium'), ('L' , 'Large')], null=True) 
+    types = models.CharField(max_length=1, choices=[('C', 'Caisse'), ('U' , 'Unite')]) # C = caisse  , U = unite
+
+    def __str__(self):
+        return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types}"
     
-class Etapes_tournee(models.Model):
-    id_etape_tournee = models.AutoField(primary_key=True)
-    tournee = models.ForeignKey(Tournee, on_delete=models.CASCADE)  
-    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+class Caisse(models.Model):
+    id_caisse = models.AutoField(primary_key=True)
+    
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    nbr_articles = models.IntegerField()
 
     def __str__(self):
-        return f"{self.tournee} - {self.commande}"    
+        return self.id_caisse   
+
+class Caisse_commande(models.Model):
+    id_caisse_commande = models.AutoField(primary_key=True)
+    
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
+    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
+    nbr_caisse = models.DecimalField(max_digits=5, decimal_places=2)
+    unite = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.id_caisse_commande

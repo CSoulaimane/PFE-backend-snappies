@@ -71,7 +71,8 @@ class Commande(models.Model):
     default = models.BooleanField(default=False)
     est_modifie = models.BooleanField(default=False)
     tournee = models.ForeignKey(Tournee, on_delete=models.CASCADE)
-
+    est_livre = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.id_commande
 

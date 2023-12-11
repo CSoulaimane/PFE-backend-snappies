@@ -53,23 +53,30 @@ def assigner_tournee(request, id_tournee):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_tournees_livreur(request, livreur_id):
-    try:
-        
-            livreur = get_object_or_404(User, id_user=livreur_id, is_admin=False)
+def get_tournees_livreur(request, username_livreur):
+    
 
+    try:
+        user = request.user
+
+        if not user.is_admin:
+
+            livreur = get_object_or_404(User, username=username_livreur, is_admin=False)
             tournees = Tournee.objects.filter(livreur=livreur)
             tournees_data = [{
                 'id de la tournee': tournee.id_tournee,
                 'livreur': tournee.livreur.username,
                 'nom': tournee.nom,
-                # Ajoutez d'autres champs de la tournée selon vos besoins
+                
             } for tournee in tournees]
 
             return HttpResponse(json.dumps(tournees_data), content_type='application/json')
-        
+
+        else:
+            return JsonResponse({'error': 'You are not authorized to retrieve tournees for a specific livreur'})
+
     except Exception as e:
-        return JsonResponse({'error': str(e)})    
+        return JsonResponse({'error': str(e)})
 
 
 @api_view(['GET'])
@@ -120,7 +127,6 @@ def get_commandes_tournee(request, id_tournee):
 
     
     
-
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -131,6 +137,7 @@ def get_details_commandes_tournee(request, id_tournee):
         # Vérifiez si l'utilisateur est un livreur (non-administrateur)
         if not user.is_admin:
             livreur = user
+#            commands = Commande.objects.filter(default=True)
 
             # Vérifiez si la tournée appartient au livreur
             tournee = get_object_or_404(Tournee, id_tournee=id_tournee, livreur=livreur)
@@ -140,24 +147,42 @@ def get_details_commandes_tournee(request, id_tournee):
             commandes_data = []
 
             for commande in commandes_tournee:
-                articles_commande = [{
-                    'id_article': caisse_commande.caisse.article.id_article,
-                    'nom_article': caisse_commande.caisse.article.nom,
-                    'nombre_articles': caisse_commande.caisse.nbr_articles,
+                version_finale = Commande.objects.filter(id_commande=commande.id_commande, default=True).first()
 
-                    'taille_article': caisse_commande.caisse.article.taille,
-                    'quantite_caisse': float(caisse_commande.nbr_caisse),
-                    'quantite_unite': int(caisse_commande.unite),
-                } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+                if version_finale:
+                    articles_commande = [{
+                        'id_article': caisse_commande.caisse.article.id_article,
+                        'nom_article': caisse_commande.caisse.article.nom,
+                        'nombre_articles': caisse_commande.caisse.nbr_articles,
+                        'taille_article': caisse_commande.caisse.article.taille,
+                        'quantite_caisse': float(caisse_commande.nbr_caisses),
+                        'quantite_unite': int(caisse_commande.unite),
+                    } for caisse_commande in Caisse_commande.objects.filter(commande=version_finale)]
 
-                commande_data = {
-                    'id_commande': commande.id_commande,
-                    'client': commande.client.name,
-                    'default': commande.default,
-                    'est_modifie': commande.est_modifie,
-                    'articles': articles_commande,
-                    # Ajoutez d'autres champs de la commande selon vos besoins
-                }
+                    commande_data = {
+                        'id_commande': version_finale.id_commande,
+                        'client': version_finale.client.name,
+                        'default': version_finale.default,
+                        'est_modifie': version_finale.est_modifie,
+                        'articles': articles_commande,
+                    }
+                else:
+                    articles_commande = [{
+                        'id_article': caisse_commande.caisse.article.id_article,
+                        'nom_article': caisse_commande.caisse.article.nom,
+                        'nombre_articles': caisse_commande.caisse.nbr_articles,
+                        'taille_article': caisse_commande.caisse.article.taille,
+                        'quantite_caisse': float(caisse_commande.nbr_caisses),
+                        'quantite_unite': int(caisse_commande.unite),
+                    } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+
+                    commande_data = {
+                        'id_commande': commande.id_commande,
+                        'client': commande.client.name,
+                        'default': commande.default,
+                        'est_modifie': commande.est_modifie,
+                        'articles': articles_commande,
+                    }
 
                 commandes_data.append(commande_data)
         else:
@@ -169,23 +194,42 @@ def get_details_commandes_tournee(request, id_tournee):
             commandes_data = []
 
             for commande in commandes_tournee:
-                articles_commande = [{
-                    'id_article': caisse_commande.caisse.article.id_article,
-                    'nom_article': caisse_commande.caisse.article.nom,
-                    'nombre_articles': caisse_commande.caisse.nbr_articles,
-                    'taille_article': caisse_commande.caisse.article.taille,
-                    'quantite_caisse': float(caisse_commande.nbr_caisse),
-                    'quantite_unite': int(caisse_commande.unite),
-                } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+                version_modifiee = Commande.objects.filter(id_commande=commande.id_commande, default=True).first()
 
-                commande_data = {
-                    'id_commande': commande.id_commande,
-                    'client': commande.client.name,
-                    'default': commande.default,
-                    'est_modifie': commande.est_modifie,
-                    'articles': articles_commande,
-                    # Ajoutez d'autres champs de la commande selon vos besoins
-                }
+                if version_modifiee:
+                    articles_commande = [{
+                        'id_article': caisse_commande.caisse.article.id_article,
+                        'nom_article': caisse_commande.caisse.article.nom,
+                        'nombre_articles': caisse_commande.caisse.nbr_articles,
+                        'taille_article': caisse_commande.caisse.article.taille,
+                        'quantite_caisse': float(caisse_commande.nbr_caisses),
+                        'quantite_unite': int(caisse_commande.unite),
+                    } for caisse_commande in Caisse_commande.objects.filter(commande=version_modifiee)]
+
+                    commande_data = {
+                        'id_commande': version_modifiee.id_commande,
+                        'client': version_modifiee.client.name,
+                        'default': version_modifiee.default,
+                        'est_modifie': version_modifiee.est_modifie,
+                        'articles': articles_commande,
+                    }
+                else:
+                    articles_commande = [{
+                        'id_article': caisse_commande.caisse.article.id_article,
+                        'nom_article': caisse_commande.caisse.article.nom,
+                        'nombre_articles': caisse_commande.caisse.nbr_articles,
+                        'taille_article': caisse_commande.caisse.article.taille,
+                        'quantite_caisse': float(caisse_commande.nbr_caisses),
+                        'quantite_unite': int(caisse_commande.unite),
+                    } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+
+                    commande_data = {
+                        'id_commande': commande.id_commande,
+                        'client': commande.client.name,
+                        'default': commande.default,
+                        'est_modifie': commande.est_modifie,
+                        'articles': articles_commande,
+                    }
 
                 commandes_data.append(commande_data)
 

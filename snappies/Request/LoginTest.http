@@ -5,9 +5,11 @@ POST http://localhost:8000/login/loginUser
 Content-Type: application/json
 
 {
-    "username": "ronaldo",
+    "username": "test",
     "password": "aze"
 }
+
+
 
 ###
 GET http://localhost:8000/login/getAllUsers

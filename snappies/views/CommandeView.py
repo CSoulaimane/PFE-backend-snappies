@@ -2,14 +2,17 @@
 
 import json
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 
-from ..models import Commande,Tournee,Caisse_commande,Caisse,Article
+from ..models import Commande,Tournee,Caisse_commande,Caisse,Article,Client
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.contrib.auth.decorators import login_required
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.db import connection
 
 def get_commande(request, commande_id):
     if request.method == 'GET':
@@ -25,20 +28,124 @@ def get_commande(request, commande_id):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_commandes(request):
+def get_commandes_tournee_admin(request,id_tournee):
 
-    user = request.user
-    if user.is_admin:
-        commandes = Commande.objects.all()
-        commandes_data = [{'id_commande': commande.id_commande, 'client': commande.client.name, 'default': commande.default, 'est_modifie': commande.est_modifie, 'tournee': commande.tournee.nom} for commande in commandes]
-        return JsonResponse({'commandes': commandes_data})
-    else:
-        return JsonResponse({'error': 'You are not authorized to get commandes'})
+    try:
+        user = request.user
+        # Vérifiez si l'utilisateur est un livreur (non-administrateur)
+        if  user.is_admin:
+    
+            # Si l'utilisateur est un administrateur, permettez l'accès à toutes les tournées
+            tournee = get_object_or_404(Tournee, id_tournee=id_tournee)
+
+            # Récupérez toutes les commandes de la tournée avec les détails des articles
+            commandes_tournee = Commande.objects.filter(tournee=tournee,default=True)
+            commandes_data = []
+
+            for commande in commandes_tournee:
+                # Si la commande est modifiée, affichez la version modifiée, sinon la version de base
+                
+                articles_commande = [{
+                    'id_article': caisse_commande.caisse.article.id_article,
+                    'nom_article': caisse_commande.caisse.article.nom,
+                    'nombre_articles': caisse_commande.caisse.nbr_articles,
+                    'taille_article': caisse_commande.caisse.article.taille,
+                    'quantite_caisse': float(caisse_commande.nbr_caisses),
+                    'quantite_unite': int(caisse_commande.unite),
+                } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+
+                commande_data = {
+                    'id_commande': commande.id_commande,
+                    'client': commande.client.name,
+                    'default': commande.default,
+                    'est_modifie': commande.est_modifie,
+                    'articles': articles_commande,
+                    # Ajoutez d'autres champs de la commande selon vos besoins
+                }
+
+                commandes_data.append(commande_data)
+
+        return HttpResponse(json.dumps(commandes_data), content_type='application/json')
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
       
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_commandes_tournee_modifie_ou_non(request,id_tournee):
+
+    print("test")
+    with connection.cursor() as cursor:
+        print("test")
+        cursor.execute(
+            """
+            SELECT 
+                c.id_commande                      
+            FROM 
+                snappies_commande c
+                
+            WHERE  
+                (
+                    (c."default" = true AND c.est_modifie = false) 
+                    OR 
+                    (c."default" = false AND c.est_modifie = true)
+                )
+                
+                AND c.tournee_id=%s
+        """       
+        ,[id_tournee]
+        )
+        
+        rows = cursor.fetchall()
+        id_list = [row[0] for row in rows]
+        print(id_list )
+
+    commandes_tournee =[]
+    commandes_data = []
+
+    for id in id_list:
+        commande =Commande.objects.get(id_commande=id)
+        commandes_tournee.append(commande)
+        print(commande)
+
+    for commande in commandes_tournee:
+        # Si la commande est modifiée, affichez la version modifiée, sinon la version de base
+
+        articles_commande = [{
+            'id_article': caisse_commande.caisse.article.id_article,
+            'nom_article': caisse_commande.caisse.article.nom,
+            'nombre_articles': caisse_commande.caisse.nbr_articles,
+            'taille_article': caisse_commande.caisse.article.taille,
+            'quantite_caisse': float(caisse_commande.nbr_caisses),
+            'quantite_unite': int(caisse_commande.unite),
+        } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
+            
+        commande_data = {
+            'id_commande': commande.id_commande,
+            'client': commande.client.name,
+            'default': commande.default,
+            'est_modifie': commande.est_modifie,
+            'articles': articles_commande,
+            # Ajoutez d'autres champs de la commande selon vos besoins
+        }
+        print("dd",commande.client.name)
+
+        client = Client.objects.get(id_client=commande.client.id_client)
+        print("dd")
+        commande_modifie = Commande.objects.get(client=client,default=False)
+        print("ds")
+        print(commande_modifie)
+        if(commande.default == True):
+            commande_data["id_commande_modifie"]=commande_modifie.id_commande
+
+        commandes_data.append(commande_data)
 
 
-    
+    return HttpResponse(json.dumps(commandes_data), content_type='application/json')
+
+
+
     
 
 @api_view(['PUT'])
@@ -70,24 +177,43 @@ def update_commande_admin(request, id_commande):
             articles = data["articles"]
 
             commande = Commande.objects.get(id_commande=id_commande)
+            client = Client.objects.get(id_client=id_client)
+
+            if commande.default == False:
+                commande_defaut = Commande.objects.get(id_client=commande.client,default=True)
+                commande_defaut.est_modifie=True
+                commande.est_modifie=True
+                commande.save()
+                commande_defaut.save()
+
             tab_articles = [];
             created_data = {"id_commande" :id_commande, "id_client" :id_client,"articles":tab_articles}
             for a in articles:
                 article = Article.objects.get(id_article=a["id_article"])
                 caisse = Caisse.objects.get(article=article)
-                print(article,caisse)
                 caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
+                if commande.default == True:
+                    commande_modifie = Commande.objects.get(client=client,default=False)
+                    caisse_commande_modifie =Caisse_commande.objects.get(commande=commande_modifie,caisse=caisse)
+
                 if  a["is_deleted"] == "true":
                         caisse_commande.delete()
+                        caisse_commande_modifie.delete()
                 elif a["unite"] != 0:
                     caisse_commande.unite = a["unite"]
                     caisse_commande.save()
+                    if commande.default == True:
+                        caisse_commande_modifie.unite = a["unite"]
+                        caisse_commande_modifie.save()
                     tab_articles.append({"id_article":a["id_article"],
                                         "nbr_caisses":caisse_commande.nbr_caisses,
                                         "unite":caisse_commande.unite })
                 else:
                     caisse_commande.nbr_caisses = a["nbr_caisses"]
                     caisse_commande.save()
+                    if commande.default == True:
+                        caisse_commande_modifie.nbr_caisses = a["nbr_caisses"]
+                        caisse_commande_modifie.save()
                     tab_articles.append({"id_article":a["id_article"],
                                         "nbr_caisses":caisse_commande.nbr_caisses,
                                         "unite":caisse_commande.unite })
@@ -97,7 +223,7 @@ def update_commande_admin(request, id_commande):
         except Exception as e:
             print(f"Erreur : {e}")
     else:
-        return JsonResponse({'error': 'You are not authorized to update a commande'})
+        return Response(status=status.HTTP_409_CONFLICT)
    
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])

@@ -1,10 +1,23 @@
-# Créer un utilisateur avec la méthode POST
+
+
+
+###
+GET http://localhost:8000/commande/get_commandes_tournee_admin/1
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###
+GET http://localhost:8000/commande/get_commandes_tournee_modifie_ou_non/1
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###Créer un utilisateur avec la méthode POST
 POST http://localhost:8000/commande/create_commande
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-    "id_client": 6,
+    "id_client": 8,
     "articles": [
         {
             "id_article": 1,
@@ -33,12 +46,12 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
 ### Update commande by id 
-PUT http://localhost:8000/commande/update_commande_admin/51
+PUT http://localhost:8000/commande/update_commande_admin/59
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-    "id_client": 5,
+    "id_client": 8,
     "articles": [
         {
             "is_deleted": "false",
@@ -49,17 +62,19 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
         {
             "is_deleted": "false",
             "id_article": 4,
-            "nbr_caisses": 5,
+            "nbr_caisses": 3,
             "unite": 0
         },
         {
             "is_deleted": "false",
-            "id_article": 6,
+            "id_article": 5,
             "nbr_caisses": 0,
-            "unite": 230
+            "unite": 15
         }
-    ]
+    ],
+    "id_tournee": 1
 }
+
 
 
 

@@ -58,22 +58,7 @@ def commande_livre(request, commande_id):
 
 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def get_commandes(request):
 
-    user = request.user
-    if user.is_admin:
-        
-
-        
-
-
-
-        return JsonResponse({'commandes': commandes_data})
-    else:
-        return JsonResponse({'error': 'You are not authorized to get commandes'})
 
 
 @api_view(['PUT'])

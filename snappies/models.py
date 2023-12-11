@@ -59,7 +59,7 @@ class Client(models.Model):
     
 class Tournee(models.Model):
     id_tournee = models.AutoField(primary_key=True )
-    livreur = models.ForeignKey(User, on_delete=models.CASCADE)
+    livreur = models.ForeignKey(User, on_delete=models.CASCADE ,null=True )
     nom = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return f"{self.livreur.username}"

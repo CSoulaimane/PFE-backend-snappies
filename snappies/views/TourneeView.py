@@ -1,4 +1,5 @@
 
+from gettext import translation
 import json
 from urllib import response
 from django.http import HttpResponse, JsonResponse
@@ -10,6 +11,25 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
  
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def creer_tournee(request):
+    try:
+        user = request.user
+        if user.is_admin:
+            nom_tournee = request.data.get('nom')  # Assurez-vous que 'nom' est fourni dans le corps de la requête
+
+                # Créer la tournée
+            tournee = Tournee.objects.create(nom=nom_tournee)
+
+            return JsonResponse({'success': f'Tournée créée avec succès', 'id_tournee': tournee.id_tournee})
+        else:
+            return JsonResponse({'error': 'Vous n\'êtes pas autorisé à créer une tournée'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+    
+    
     
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -19,7 +39,7 @@ def get_all_tournees(request):
         user = request.user
         if user.is_admin:
             tournees = Tournee.objects.all()
-            tournees_data = [{'id': tourne.id_tournee, 'livreur': tourne.livreur.username ,'nom': tourne.nom } for tourne in tournees]
+            tournees_data = [{'id': tourne.id_tournee, 'livreur': tourne.livreur.username if tourne.livreur else None, 'nom': tourne.nom} for tourne in tournees]
             return HttpResponse(json.dumps(tournees_data), content_type='application/json')
         else:
             return JsonResponse({'error': 'You are not authorized to create a commande'})
@@ -64,7 +84,7 @@ def get_tournees_livreur(request, username_livreur):
             livreur = get_object_or_404(User, username=username_livreur, is_admin=False)
             tournees = Tournee.objects.filter(livreur=livreur)
             tournees_data = [{
-                'id de la tournee': tournee.id_tournee,
+                'id_tournee': tournee.id_tournee,
                 'livreur': tournee.livreur.username,
                 'nom': tournee.nom,
                 

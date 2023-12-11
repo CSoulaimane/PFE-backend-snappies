@@ -5,7 +5,7 @@ POST http://localhost:8000/login/loginUser
 Content-Type: application/json
 
 {
-    "username": "test",
+    "username": "ronaldo",
     "password": "aze"
 }
 
@@ -28,14 +28,24 @@ POST http://localhost:8000/login/create
 Content-Type: application/json
 
 {
-  "username": "admin3",
+  "username": "livreur random",
   "password": "aze",  
-  "is_admin": true
+  "is_admin": false
 }
 
 ### delete user
-DELETE http://localhost:8000/login/delete_user/1
+DELETE http://localhost:8000/login/delete_livreur/18
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###
+PUT http://localhost:8000/login/update_user/1
+Content-Type: application/json
+
+{
+  "new_username": "billy new",
+  "new_password": "azeaze",
+}
 
 
 ### load user data 

@@ -125,6 +125,7 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
         commande_data = {
             'id_commande': commande.id_commande,
             'client': commande.client.name,
+            'client_adresse': commande.client.adresse,
             'default': commande.default,
             'est_modifie': commande.est_modifie,
             'articles': articles_commande,

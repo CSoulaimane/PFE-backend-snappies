@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views.CommandeView import create_commande
 from .views.CommandeView import get_commande
-from .views.CommandeView import get_commandes
+from .views.CommandeView import get_commandes_tournee_admin,get_commandes_tournee_modifie_ou_non
 from .views.CommandeView import update_commande_admin
 from .views.CommandeView import commande_livre
 from .views.CommandeView import get_admin_commandes
@@ -37,13 +37,14 @@ from .views.ArticleView import update_article
 
 urlpatterns = [
     path('getOne/<commande_id>', get_commande, name="get_commande"),
-    path('getAll', get_commandes, name="get_commandes"),
     path('create_commande', create_commande, name='create_commande'),
     path('update_commande_admin/<id_commande>', update_commande_admin, name='update_commande_admin'),
     path('commande_livre/<commande_id>', commande_livre, name='commande livre'),
-    path('get_admin_commandes', get_admin_commandes, name='get_admin_commandes'),
-    path('get_livreur_commandes', get_livreur_commandes, name='get_livreur_commandes'),
+    path('get_commandes_tournee_admin/<id_tournee>', get_commandes_tournee_admin, name='get_commandes_tournee_admin'),
+    path('get_commandes_tournee_modifie_ou_non/<id_tournee>', get_commandes_tournee_modifie_ou_non, name='get_commandes_tournee_modifie_ou_non'),
 
+
+    
     path('loginUser', login , name='login_user'),
     path('getAllUsers', getAll, name='readall'),
     path('create', create_user, name='create_user'),

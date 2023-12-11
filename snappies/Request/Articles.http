@@ -1,12 +1,16 @@
 # test articles
 
 ### get all articles
-GET http://localhost:8000/articles/get_all_clients_free
+GET http://localhost:8000/articles/get_all_articles
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
+<<<<<<< HEAD
 ### get all articles
 GET http://localhost:8000/articles/get_all_articles
+=======
+GET http://localhost:8000/articles/get_all_clients_free
+>>>>>>> 9347a9716625ddf31e169a5623ff46c67269408d
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 ### Créer un artcile 

@@ -23,3 +23,10 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
   "numero_telephone": "9999999",  
   "adresse": "nouvelle adresse"
 }
+
+
+### get 
+GET http://localhost:8000/client/get_all_clients_free
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+

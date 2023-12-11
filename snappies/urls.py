@@ -3,11 +3,10 @@ from django.urls import path
 from .views.CommandeView import create_commande
 from .views.CommandeView import get_commande
 from .views.CommandeView import get_commandes
-from .views.CommandeView import update_commande
+from .views.CommandeView import update_commande_admin
 from .views.CommandeView import commande_livre
 from .views.CommandeView import get_admin_commandes
 from .views.CommandeView import get_livreur_commandes
-
 
 from .views.LoginView import login
 from .views.LoginView import getAll
@@ -21,7 +20,7 @@ from .views.LoginView import get_all_livreurs
 from .views.ClientView import create_client
 from .views.ClientView import delete_client
 from .views.ClientView import update_client
-
+from .views.ClientView import get_all_clients_free
 
 from .views.TourneeView import assigner_tournee
 from .views.TourneeView import get_all_tournees
@@ -38,7 +37,7 @@ urlpatterns = [
     path('getOne/<commande_id>', get_commande, name="get_commande"),
     path('getAll', get_commandes, name="get_commandes"),
     path('create_commande', create_commande, name='create_commande'),
-    path('update_commande/<commande_id>', update_commande, name='update_commande'),
+    path('update_commande_admin/<id_commande>', update_commande_admin, name='update_commande_admin'),
     path('commande_livre/<commande_id>', commande_livre, name='commande livre'),
     path('get_admin_commandes', get_admin_commandes, name='get_admin_commandes'),
     path('get_livreur_commandes', get_livreur_commandes, name='get_livreur_commandes'),
@@ -54,6 +53,7 @@ urlpatterns = [
     path('create_client', create_client , name="create client"),
     path('delete_client/<id_client>', delete_client , name="delete client"),
     path('update_client/<id_client>', update_client , name="update client"),
+    path('get_all_clients_free', get_all_clients_free , name="get_all_clients_free"),
 
     path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
     path('get_all_tournee', get_all_tournees , name="get all tournee"),

@@ -1,7 +1,7 @@
 # test articles
 
 ### get all articles
-GET http://localhost:8000/articles/get_all_articles
+GET http://localhost:8000/articles/get_all_clients_free
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
@@ -22,12 +22,12 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
 ### Créer un artcile 
-PATCH  http://localhost:8000/articles/update_article/28
+PATCH  http://localhost:8000/articles/update_article/6
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "nom": "updated test 16h58",
+  "nom": "sacs poubelles update",
   "nbr_articles": 200
 }
  

@@ -95,26 +95,16 @@ def update_article(request, id):
     if user.is_admin:
         try:
             print("test")
-            article = Article.objects.get(id_article=id)
-            print("test",article.types)
-            
-
-            if article.types == "U":
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            
-            print("test")
+            article = Article.objects.get(id_article=id)  
             caisse = Caisse.objects.get(article=article)
-            print("tescccct")
 
             data = json.loads(request.body)
-            print("tesdt")
             nom = data.get('nom')
             nbr_articles = data.get('nbr_articles')
-            print("test")
 
             if(nom == ""):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            if nbr_articles != 0:
+            if article.types == "C":
                 article.nom = nom
                 caisse.nbr_articles = nbr_articles
                 caisse.save()

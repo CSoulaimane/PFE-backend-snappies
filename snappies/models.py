@@ -83,7 +83,7 @@ class Article(models.Model):
     types = models.CharField(max_length=1, choices=[('C', 'Caisse'), ('U' , 'Unite')]) # C = caisse  , U = unite
 
     def __str__(self):
-        return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types}"
+        return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types} "
     
 
 class Caisse(models.Model):
@@ -93,7 +93,7 @@ class Caisse(models.Model):
     test = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.id_caisse   
+        return f"id : {self.id_caisse}"   
 
 class Caisse_commande(models.Model):
     id_caisse_commande = models.AutoField(primary_key=True)
@@ -104,4 +104,4 @@ class Caisse_commande(models.Model):
     unite = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.id_caisse_commande
+        return f"{self.id_caisse_commande}"

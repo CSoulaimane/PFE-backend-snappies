@@ -36,33 +36,6 @@ def get_commandes(request):
         return JsonResponse({'error': 'You are not authorized to get commandes'})
       
 
-@api_view(['PUT'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def update_commande(request, commande_id):
-    user = request.user
-    if user.is_admin:
-        try:
-            commande = Commande.objects.get(id_commande=commande_id)
-            data = json.loads(request.body)
-
-            if 'client' in data:
-                commande.client_id = data['client']
-            if 'default' in data:
-                commande.default = data['default']
-            if 'est_modifie' in data:
-                commande.est_modifie = data['est_modifie']
-            if 'tournee' in data:
-                commande.tournee_id = data['tournee']
-
-            commande.save()
-
-            updated_data = {'id_commande': commande.id_commande, 'client': commande.client.name, 'default': commande.default, 'est_modifie': commande.est_modifie, 'tournee': commande.tournee.nom}
-            return JsonResponse({'commande': updated_data})
-        except Commande.DoesNotExist:
-            return JsonResponse({'error': 'Commande not found'}, status=404)
-    else:
-        return JsonResponse({'error': 'You are not authorized to update a commande'})
 
 
     
@@ -84,30 +57,63 @@ def commande_livre(request, commande_id):
 
 
 
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_commande_admin(request, id_commande):
+    user = request.user
+    if user.is_admin:
+        try:
+            data = json.loads(request.body)
+             
+            id_client = data["id_client"]
+            articles = data["articles"]
+
+            commande = Commande.objects.get(id_commande=id_commande)
+            tab_articles = [];
+            created_data = {"id_commande" :id_commande, "id_client" :id_client,"articles":tab_articles}
+            for a in articles:
+                article = Article.objects.get(id_article=a["id_article"])
+                caisse = Caisse.objects.get(article=article)
+                print(article,caisse)
+                caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
+                if  a["is_deleted"] == "true":
+                        caisse_commande.delete()
+                elif a["unite"] != 0:
+                    caisse_commande.unite = a["unite"]
+                    caisse_commande.save()
+                    tab_articles.append({"id_article":a["id_article"],
+                                        "nbr_caisses":caisse_commande.nbr_caisses,
+                                        "unite":caisse_commande.unite })
+                else:
+                    caisse_commande.nbr_caisses = a["nbr_caisses"]
+                    caisse_commande.save()
+                    tab_articles.append({"id_article":a["id_article"],
+                                        "nbr_caisses":caisse_commande.nbr_caisses,
+                                        "unite":caisse_commande.unite })
+
+
+            return JsonResponse({'commande': created_data})
+        except Exception as e:
+            print(f"Erreur : {e}")
+    else:
+        return JsonResponse({'error': 'You are not authorized to update a commande'})
+   
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_commande(request):
     user = request.user
     try:
-        if user.is_admin:
-            print("create")
-           
+        if user.is_admin:           
             data = json.loads(request.body)
              
-            print("create")
             id_client = data["id_client"]
-            print("create")
             articles = data["articles"]
-            print("create")
             id_tournee = data["id_tournee"]
-            print("createee")
 
-        
             clientDejaTournee = Commande.objects.filter(client=id_client)
-            print("eddd")
             tourneeExistePas = not Tournee.objects.filter(id_tournee=id_tournee)
-            print("eddd")
             if clientDejaTournee.exists():
                 return Response(status=status.HTTP_409_CONFLICT)
             if tourneeExistePas:
@@ -127,8 +133,8 @@ def create_commande(request):
             print("apres modifie ", commandeModifie)
 
             tab_articles = []
-            data_created = {"commandeDefaut":{"id_commande" : commandeDefaut.id_commande,"client":id_client, "articles":tab_articles },
-                            "commandeModifie":{"id_commande" : commandeModifie.id_commande,"client":id_client ,"articles": tab_articles } }
+            data_created = {"commandeDefaut":{"id_commande" : commandeDefaut.id_commande,"id_client":id_client, "articles":tab_articles },
+                            "commandeModifie":{"id_commande" : commandeModifie.id_commande,"id_client":id_client ,"articles": tab_articles } }
             for a in articles:
                 if a["nbr_caisses"] != 0 and a["unite"] != 0:
                     commandeDefaut.delete()

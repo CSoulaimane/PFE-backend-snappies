@@ -11,9 +11,9 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "nom": "souli test 23",
-  "type": "U",
-  "nbr_articles" : 0
+  "nom": "salut",
+  "type": "C",
+  "nbr_articles" : 12
 }
 
 ### delete all articles

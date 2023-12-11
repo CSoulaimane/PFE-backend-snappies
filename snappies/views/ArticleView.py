@@ -49,10 +49,14 @@ def create_article(request):
             article = Article.objects.get(nom=nom)
 
             if(type == 'C'):
+                if(nbr_articles == 0):
+                    article.delete()
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
                 caisse = Caisse(article=article,nbr_articles=nbr_articles)
             elif(type == 'U'):
                 caisse = Caisse(article=article,nbr_articles=0)
             else:
+                 article.delete()
                  return Response(status=status.HTTP_400_BAD_REQUEST)
             caisse.save()
             created_data = {'id_caisse': caisse.id_caisse,'id_article': caisse.article.id_article, 'nom': caisse.article.nom ,'taille': caisse.article.taille,

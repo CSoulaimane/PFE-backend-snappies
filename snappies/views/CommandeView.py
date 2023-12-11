@@ -172,33 +172,46 @@ def update_commande_admin(request, id_commande):
     if user.is_admin:
         try:
             data = json.loads(request.body)
-             
+            print("ici")
             id_client = data["id_client"]
             articles = data["articles"]
+            print("ici")
+
 
             commande = Commande.objects.get(id_commande=id_commande)
             client = Client.objects.get(id_client=id_client)
 
             if commande.default == False:
-                commande_defaut = Commande.objects.get(id_client=commande.client,default=True)
+                commande_defaut = Commande.objects.get(client=commande.client,default=True)
                 commande_defaut.est_modifie=True
                 commande.est_modifie=True
                 commande.save()
                 commande_defaut.save()
-
+            print("ici")
             tab_articles = [];
             created_data = {"id_commande" :id_commande, "id_client" :id_client,"articles":tab_articles}
             for a in articles:
+                print("teststddd",a)
                 article = Article.objects.get(id_article=a["id_article"])
                 caisse = Caisse.objects.get(article=article)
                 caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
                 if commande.default == True:
+                    print("testst")
                     commande_modifie = Commande.objects.get(client=client,default=False)
-                    caisse_commande_modifie =Caisse_commande.objects.get(commande=commande_modifie,caisse=caisse)
+                    caisse_commande_modifie =Caisse_commande.objects.filter(commande=commande_modifie,caisse=caisse)
+                    if caisse_commande_modifie.exists and len(caisse_commande_modifie) > 0:
+                        print("ici : ",caisse_commande_modifie)
+                        caisse_commande_modifie = caisse_commande_modifie[0]
+                        print(caisse_commande_modifie)
+                    else:
+                        caisse_commande_modifie= Caisse_commande(caisse=caisse,commande=commande_modifie,nbr_caisses=caisse_commande.nbr_caisses,unite=caisse_commande.unite)
+                        caisse_commande_modifie.save()
+                        print(caisse_commande_modifie)
 
                 if  a["is_deleted"] == "true":
                         caisse_commande.delete()
-                        caisse_commande_modifie.delete()
+                        if commande.default == True:
+                            caisse_commande_modifie.delete()
                 elif a["unite"] != 0:
                     caisse_commande.unite = a["unite"]
                     caisse_commande.save()

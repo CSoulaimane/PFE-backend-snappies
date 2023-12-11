@@ -1,3 +1,7 @@
+
+GET http://localhost:8000/articles/get_all_clients_free
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
 ### Créer un client 
 POST http://localhost:8000/client/create_client
 Content-Type: application/json

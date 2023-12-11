@@ -4,23 +4,66 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "client": 3,
-  "default": false,
-  "est_modifie": false,
-  "tournee": 2
+    "id_client": 6,
+    "articles": [
+        {
+            "id_article": 1,
+            "nbr_caisses": 3,
+            "unite": 0
+        },
+        {
+            "id_article": 4,
+            "nbr_caisses": 3,
+            "unite": 0
+        },
+        {
+            "id_article": 5,
+            "nbr_caisses": 0,
+            "unite": 15
+        }
+    ],
+    "id_tournee": 1
 }
+
+
+
+
 
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
 ### Update commande by id 
-PUT http://localhost:8000/commande/update_commande/1
+PUT http://localhost:8000/commande/update_commande_admin/51
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "value": "Commande Updated"
+    "id_client": 5,
+    "articles": [
+        {
+            "is_deleted": "false",
+            "id_article": 1,
+            "nbr_caisses": 5,
+            "unite": 0
+        },
+        {
+            "is_deleted": "false",
+            "id_article": 4,
+            "nbr_caisses": 5,
+            "unite": 0
+        },
+        {
+            "is_deleted": "false",
+            "id_article": 6,
+            "nbr_caisses": 0,
+            "unite": 230
+        }
+    ]
 }
+
+
+
+
 
 ###
 GET http://localhost:8000/commande/getAll

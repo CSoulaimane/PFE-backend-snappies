@@ -49,10 +49,14 @@ def create_article(request):
             article = Article.objects.get(nom=nom)
 
             if(type == 'C'):
+                if(nbr_articles == 0):
+                    article.delete()
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
                 caisse = Caisse(article=article,nbr_articles=nbr_articles)
             elif(type == 'U'):
                 caisse = Caisse(article=article,nbr_articles=0)
             else:
+                 article.delete()
                  return Response(status=status.HTTP_400_BAD_REQUEST)
             caisse.save()
             created_data = {'id_caisse': caisse.id_caisse,'id_article': caisse.article.id_article, 'nom': caisse.article.nom ,'taille': caisse.article.taille,
@@ -91,26 +95,16 @@ def update_article(request, id):
     if user.is_admin:
         try:
             print("test")
-            article = Article.objects.get(id_article=id)
-            print("test",article.types)
-            
-
-            if article.types == "U":
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            
-            print("test")
+            article = Article.objects.get(id_article=id)  
             caisse = Caisse.objects.get(article=article)
-            print("tescccct")
 
             data = json.loads(request.body)
-            print("tesdt")
             nom = data.get('nom')
             nbr_articles = data.get('nbr_articles')
-            print("test")
 
             if(nom == ""):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            if nbr_articles != 0:
+            if article.types == "C":
                 article.nom = nom
                 caisse.nbr_articles = nbr_articles
                 caisse.save()

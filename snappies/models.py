@@ -74,7 +74,7 @@ class Commande(models.Model):
     est_livre = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.id_commande
+        return   f"commande : {self.id_commande}"  
 
 class Article(models.Model):
     id_article = models.AutoField(primary_key=True)
@@ -83,7 +83,7 @@ class Article(models.Model):
     types = models.CharField(max_length=1, choices=[('C', 'Caisse'), ('U' , 'Unite')]) # C = caisse  , U = unite
 
     def __str__(self):
-        return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types}"
+        return f"Article {self.id_article} - Nom: {self.nom}, Taille: {self.taille}, Type: {self.types} "
     
 
 class Caisse(models.Model):
@@ -93,15 +93,15 @@ class Caisse(models.Model):
     test = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.id_caisse   
+        return f"id : {self.id_caisse}"   
 
 class Caisse_commande(models.Model):
     id_caisse_commande = models.AutoField(primary_key=True)
     
-    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, unique=True)
-    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE, unique=True)
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+    caisse = models.ForeignKey(Caisse, on_delete=models.CASCADE)
     nbr_caisses = models.DecimalField(max_digits=5, decimal_places=2)
     unite = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.id_caisse_commande
+        return f"{self.id_caisse_commande}"

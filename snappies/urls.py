@@ -18,6 +18,7 @@ from .views.LoginView import delete_livreur
 from .views.LoginView import update_livreur
 from .views.LoginView import delete_user
 from .views.LoginView import get_user
+from .views.LoginView import create_livreur
 
 #from .views.LoginView import connected_users
 
@@ -63,6 +64,7 @@ urlpatterns = [
     path('update_user/<id_user>', update_livreur, name="update_livreur"),
     path('delete_user/<id_user>', delete_user, name="delete_user"),
     path('get_user/<id_user>', get_user, name="get_user"),
+    path('create_livreur', create_livreur, name="create livreur"),
 
     #path('get_users_connected', connected_users , name="get_users_connected"),
     

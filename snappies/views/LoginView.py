@@ -35,6 +35,29 @@ def create_user(request):
         return HttpResponse('error')
 
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_livreur(request):
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            is_admin = False  # Livreur is not an admin
+
+            # Check if the username is unique
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({'error': 'Username already exists'}, status=400)
+
+            # Create the user
+            user = User.objects.create_user(username=username, password=password, is_admin=is_admin)
+            user_data = {'id_user': user.id_user, 'username': user.username, 'is_admin': user.is_admin}
+
+            return JsonResponse(user_data, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+
+
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])

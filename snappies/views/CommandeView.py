@@ -102,6 +102,24 @@ def update_livraison(request,id_commande):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['PATCH'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_est_livre(request):
+
+    try:
+        # Vérifiez si l'utilisateur est un livreur (non-administrateur)
+        commandes = Commande.objects.all()
+        
+        for c in commandes:
+            c.est_livre= False
+            c.save()
+
+        return Response({"est_livre" : "maitenant à false"},status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        print("ici" , e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -141,7 +159,6 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
     for id in id_list:
         commande =Commande.objects.get(id_commande=id)
         commandes_tournee.append(commande)
-        print(commande)
 
     for commande in commandes_tournee:
         # Si la commande est modifiée, affichez la version modifiée, sinon la version de base
@@ -166,15 +183,13 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
 
             # Ajoutez d'autres champs de la commande selon vos besoins
         }
-        print("dd",commande.client.name)
 
-        client = Client.objects.get(id_client=commande.client.id_client)
-        print("dd")
-        commande_modifie = Commande.objects.get(client=client,default=False)
-        print("ds")
-        print(commande_modifie)
+        
         if(commande.default == True):
-            commande_data["id_commande_modifie"]=commande_modifie.id_commande
+            client = Client.objects.get(id_client=commande.client.id_client)
+            commande_modifie = Commande.objects.get(client=client,default=False)
+            print("sss")
+            commande_data["id_commande"]=commande_modifie.id_commande
 
         commandes_data.append(commande_data)
 

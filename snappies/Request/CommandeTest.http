@@ -43,7 +43,10 @@ PATCH  http://localhost:8000/commande/update_livraison/59
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
-
+### udpate livraison
+PATCH  http://localhost:8000/commande/update_est_livre
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771

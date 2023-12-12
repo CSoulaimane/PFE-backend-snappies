@@ -21,7 +21,7 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 }
 
 ### delete all articles
-DELETE  http://localhost:8000/articles/delete_article/35
+DELETE  http://localhost:8000/articles/delete_article/2
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 

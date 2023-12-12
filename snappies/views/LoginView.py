@@ -38,32 +38,63 @@ def create_user(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_user(request, id_user):
-    print("jkj")
-    try:
-        print("dede")
-        livreur = User.objects.get(id_user=id_user)
-
-    
-        print(livreur)
-        tournees = Tournee.objects.filter(livreur=livreur)
-        print("")
-        for t in tournees:
-            print(t)
-            t.livreur=None
-            t.save()
-            print("dede")
-        print("dds")
+    if request.method == 'DELETE':
         try:
-            livreur.delete()
-        except Exception as e:
-            print("ici")
-            print(f"Erreur : {e}")
-
-        return JsonResponse({'message': f'User {id_user} deleted successfully'})
-    except Exception as e:
-        print(e)
-   
+            user = User.objects.get(id_user=id_user)
+            user.delete()
+            return JsonResponse({'message': f'User {id_user} deleted successfully'})
+        except User.DoesNotExist:
+            return JsonResponse({'error': f'User with id {id_user} does not exist'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
  
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_livreur(request, id_user):
+    try:
+        user = User.objects.get(id_user=id_user , is_admin=False)
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'User with id {id_user} does not exist'}, status=404)
+
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        new_username = data.get('new_username')
+        new_password = data.get('new_password')
+
+        # Update user fields
+        if new_username:
+            user.username = new_username
+        if new_password:
+            user.set_password(new_password)
+        
+
+        user.save()
+
+        return JsonResponse({'message': f'Livreur {id_user} updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_livreur(request, id_user):
+    user = request.user
+
+    try:
+        user = User.objects.get(id=id_user)
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'Utilisateur avec l\'id {id_user} n\'existe pas'}, status=404)
+
+    if user.is_admin:
+        return JsonResponse({'error': 'Vous n\'avez pas le droit de supprimer un admin'})
+    elif user.is_livreur:
+        livreur = User.objects.get(id=id_user, is_admin=False)
+        livreur.delete()
+        return JsonResponse({'message': f'Livreur {livreur.username} supprimé avec succès'})
+    else:
+        return JsonResponse({'error': 'Vous pouvez seulement supprimer des livreurs'})
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])

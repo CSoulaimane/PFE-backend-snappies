@@ -5,6 +5,8 @@ from .views.CommandeView import get_commande
 from .views.CommandeView import get_commandes_tournee_admin,get_commandes_tournee_modifie_ou_non
 from .views.CommandeView import update_commande_admin,update_livraison
 from .views.CommandeView import commande_livre
+from .views.CommandeView import get_admin_commandes
+from .views.CommandeView import get_livreur_commandes
 
 from .views.LoginView import login,delete_user
 from .views.LoginView import getAll
@@ -12,6 +14,8 @@ from .views.LoginView import create_user
 from .views.LoginView import logout_user
 from .views.LoginView import load_user_data
 from .views.LoginView import get_all_livreurs
+from .views.LoginView import delete_livreur
+from .views.LoginView import update_livreur
 
 #from .views.LoginView import connected_users
 
@@ -19,11 +23,15 @@ from .views.ClientView import create_client
 from .views.ClientView import delete_client
 from .views.ClientView import update_client
 from .views.ClientView import get_all_clients_free
+from .views.ClientView import get_client
 
 from .views.TourneeView import assigner_tournee
 from .views.TourneeView import get_all_tournees
 from .views.TourneeView import get_commandes_tournee
 from .views.TourneeView import get_details_commandes_tournee
+from .views.TourneeView import get_tournees_livreur
+from .views.TourneeView import creer_tournee
+
 
 from .views.ArticleView import get_all_articles
 from .views.ArticleView import create_article
@@ -49,17 +57,23 @@ urlpatterns = [
     path('logout/<str:token>', logout_user , name="logout"),
     path('loadUserData', load_user_data , name="create client"),
     path('getAllLivreurs', get_all_livreurs , name="get_all_livreurs"),
+    path('delete_livreur/<int:id_user>/', delete_livreur, name="delete_livreur"),
+    path('update_user/<int:id_user>/', update_livreur, name="update_livreur"),
     #path('get_users_connected', connected_users , name="get_users_connected"),
     
     path('create_client', create_client , name="create client"),
     path('delete_client/<id_client>', delete_client , name="delete client"),
     path('update_client/<id_client>', update_client , name="update client"),
     path('get_all_clients_free', get_all_clients_free , name="get_all_clients_free"),
+    path('get_client/<int:id_client>', get_client , name="get_client"),
 
     path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
     path('get_all_tournee', get_all_tournees , name="get all tournee"),
     path('get_commandes_from_tournee/<id_tournee>', get_commandes_tournee, name="get_commandes_tournee"),
     path('<int:id_tournee>/commandes/details', get_details_commandes_tournee, name='get_details_commandes_tournee'),
+    path('get_tournees_livreur/<username_livreur>', get_tournees_livreur, name='get_tournees_livreur'),
+    path('creer_tournee', creer_tournee, name='creer_tournee'),
+
 
     path('get_all_articles',get_all_articles, name ='get all article'),
     path('create_article',create_article, name ='create article'),

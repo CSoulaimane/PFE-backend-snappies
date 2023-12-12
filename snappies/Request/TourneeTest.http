@@ -1,4 +1,15 @@
 
+
+### creer une tournee
+POST http://localhost:8000/tournee/creer_tournee
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+{
+  "nom": "Tournee de Laeken"
+}
+
+
 ### assigner la tournee 2 a Ronaldo (id = 5)
 POST http://localhost:8000/tournee/assigner_tournee/2
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
@@ -12,7 +23,11 @@ Content-Type: application/json
 GET http://localhost:8000/tournee/get_all_tournee
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
+###
+GET http://localhost:8000/tournee/get_tournees_livreur/ronaldo
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
+#47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
 
 ### renvoi les commandes d'une tournee specifique 
@@ -22,6 +37,6 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 //tournees/<int:id_tournee>/commandes/details
 
 ### renvoi la liste des caisses dans la commande de la tournee 1
-GET http://localhost:8000/tournee/1/commandes/details
+GET http://localhost:8000/tournee/2/commandes/details
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 

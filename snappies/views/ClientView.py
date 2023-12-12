@@ -61,6 +61,25 @@ def create_client(request):
         client.save()
         return HttpResponse(json.dumps(client_data))
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_client(request, id_client):
+    try:
+        client = Client.objects.get(id_client=id_client)
+    except Client.DoesNotExist:
+        return JsonResponse({'error': f'Client with id {id_client} does not exist'}, status=404)
+
+    client_data = {
+        'id': client.id_client,
+        'name': client.name,
+        'numero_telephone': client.numero_telephone,
+        'adresse': client.adresse,
+        # Add other fields if necessary
+    }
+
+    return JsonResponse(client_data, status=status.HTTP_200_OK)
+
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])

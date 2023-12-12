@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### delete user
-DELETE http://localhost:8000/login/delete_user/1
+DELETE http://localhost:8000/login/delete_user/23
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 

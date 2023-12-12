@@ -70,6 +70,38 @@ def get_commandes_tournee_admin(request,id_tournee):
         return JsonResponse({'error': str(e)})
       
 
+@api_view(['PATCH'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_livraison(request,id_commande):
+    print("ee")
+    try:
+        # Vérifiez si l'utilisateur est un livreur (non-administrateur)
+        commande = Commande.objects.get(id_commande=id_commande)
+        print(commande.default)
+        if commande.default == True:
+            commande.est_livre=True
+            commande.est_modifie=False
+            commande_modif = Commande.objects.get(client=commande.client,default=False)
+            commande_modif.est_modifie=False
+            commande_modif.save()
+            commande.save()
+        else:
+            commande.est_modifie=False
+            commande_default=Commande.objects.get(client=commande.client,default=True)
+            commande_default.est_livre=True
+            commande_default.est_modifie=False
+            commande_default.save()
+
+        return Response({"modifie" : "true"},status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        print("ici" , e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -120,13 +152,15 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
             'quantite_caisse': float(caisse_commande.nbr_caisses),
             'quantite_unite': int(caisse_commande.unite),
         } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
-            
+       
         commande_data = {
             'id_commande': commande.id_commande,
             'client': commande.client.name,
+            "est_livre" : commande.est_livre,
             'default': commande.default,
             'est_modifie': commande.est_modifie,
             'articles': articles_commande,
+
             # Ajoutez d'autres champs de la commande selon vos besoins
         }
         print("dd",commande.client.name)
@@ -168,34 +202,76 @@ def commande_livre(request, commande_id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_commande_admin(request, id_commande):
+    id_commande=int(id_commande)
     user = request.user
     if user.is_admin:
         try:
             data = json.loads(request.body)
             print("ici")
-            id_client = data["id_client"]
             articles = data["articles"]
             print("ici")
 
 
             commande = Commande.objects.get(id_commande=id_commande)
-            client = Client.objects.get(id_client=id_client)
+            client = commande.client
+            id_client=client.id_client
 
+            # syncronsier commande par defaut et modifie
+            if commande.default == True:
+                print("laaaaaaaaaaaa")
+                commande_modifie = Commande.objects.get(client=commande.client,default=False)    
+                with connection.cursor() as cursor:
+                    # Créer un tuple d'arguments pour la requête SQL
+                    args = (commande.tournee.id_tournee, commande_modifie.id_commande,commande.tournee.id_tournee,commande.id_commande)
+
+                    cursor.execute(
+                        """
+                        select  cc.id_caisse_commande
+                        from snappies_caisse_commande cc,snappies_commande c
+                        where cc.commande_id = c.id_commande
+                        and c."default" = false
+                        and c.tournee_id = %s
+                        and c.id_commande= %s
+                        and cc.caisse_id not in (
+
+                            select ccDefault.caisse_id
+                            from snappies_caisse_commande ccDefault,snappies_commande c2
+                            where  c2."default" =true
+                            and c2.id_commande = ccDefault.commande_id
+                            and c2.tournee_id=%s
+                            and c2.id_commande= %s
+                            )
+                        """,
+                        args
+                    )
+                    rows = cursor.fetchall()
+                    list_caisse_commandes_id = [row[0] for row in rows]
+                    print("iciiiii", list_caisse_commandes_id) 
+                for id in list_caisse_commandes_id:
+                    c = Caisse_commande.objects.get(id_caisse_commande=id)
+                    c.delete()
+                    print("supprimer")
+
+            #mettre a jour les infos pour dire que la commande d un client a ete modifie temporairement
             if commande.default == False:
                 commande_defaut = Commande.objects.get(client=commande.client,default=True)
                 commande_defaut.est_modifie=True
                 commande.est_modifie=True
                 commande.save()
                 commande_defaut.save()
-            print("ici")
             tab_articles = [];
             created_data = {"id_commande" :id_commande, "id_client" :id_client,"articles":tab_articles}
+
+
+
             for a in articles:
                 print("teststddd",a)
                 article = Article.objects.get(id_article=a["id_article"])
                 caisse = Caisse.objects.get(article=article)
-                caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
-                if commande.default == True:
+                if a["is_created"] != "true":
+                    print("is_created")
+                    caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
+                if commande.default == True and a["is_created"] != "true" :
                     print("testst")
                     commande_modifie = Commande.objects.get(client=client,default=False)
                     caisse_commande_modifie =Caisse_commande.objects.filter(commande=commande_modifie,caisse=caisse)
@@ -209,26 +285,42 @@ def update_commande_admin(request, id_commande):
                         print(caisse_commande_modifie)
 
                 if  a["is_deleted"] == "true":
-                        caisse_commande.delete()
-                        if commande.default == True:
-                            caisse_commande_modifie.delete()
+                    print("deleted")
+                    caisse_commande.delete()
+                    if commande.default == True:
+                        caisse_commande_modifie.delete()
+                elif a["is_created"] == "true":
+                    print("creteeed")
+                    if commande.default == True:
+                        new_caisse_commande = Caisse_commande(commande=commande,caisse=caisse,nbr_caisses=a["nbr_caisses"],unite=a["unite"])
+                        new_caisse_commande_modifie = Caisse_commande(commande=commande_modifie,caisse=caisse,nbr_caisses=a["nbr_caisses"],unite=a["unite"])
+                        new_caisse_commande.save()
+                        new_caisse_commande_modifie.save()
+                    else:
+                        new_caisse_commande_modifie = Caisse_commande(commande=commande,caisse=caisse,nbr_caisses=a["nbr_caisses"],unite=a["unite"])
+                        new_caisse_commande_modifie.save()
+                    tab_articles.append({"id_article":a["id_article"],
+                                        "nbr_caisses":float(new_caisse_commande.nbr_caisses),
+                                        "unite":new_caisse_commande.unite })                    
                 elif a["unite"] != 0:
+                    print("unite")
                     caisse_commande.unite = a["unite"]
                     caisse_commande.save()
                     if commande.default == True:
                         caisse_commande_modifie.unite = a["unite"]
                         caisse_commande_modifie.save()
                     tab_articles.append({"id_article":a["id_article"],
-                                        "nbr_caisses":caisse_commande.nbr_caisses,
+                                        "nbr_caisses":float(caisse_commande.nbr_caisses),
                                         "unite":caisse_commande.unite })
                 else:
+                    print("nbr_caisses")
                     caisse_commande.nbr_caisses = a["nbr_caisses"]
                     caisse_commande.save()
                     if commande.default == True:
                         caisse_commande_modifie.nbr_caisses = a["nbr_caisses"]
                         caisse_commande_modifie.save()
                     tab_articles.append({"id_article":a["id_article"],
-                                        "nbr_caisses":caisse_commande.nbr_caisses,
+                                        "nbr_caisses":float(caisse_commande.nbr_caisses),
                                         "unite":caisse_commande.unite })
 
 

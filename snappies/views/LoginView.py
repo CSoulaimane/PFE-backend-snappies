@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from ..models import User
+from ..models import User,Tournee
 
 # users/views.py
 
@@ -34,17 +34,35 @@ def create_user(request):
         return HttpResponse('error')
 
 
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_user(request, id_user):
+    print("jkj")
+    try:
+        print("dede")
+        livreur = User.objects.get(id_user=id_user)
 
-def delete_user(request, user_id):
-    if request.method == 'DELETE':
+    
+        print(livreur)
+        tournees = Tournee.objects.filter(livreur=livreur)
+        print("")
+        for t in tournees:
+            print(t)
+            t.livreur=None
+            t.save()
+            print("dede")
+        print("dds")
         try:
-            user = User.objects.get(id_user=user_id)
-            user.delete()
-            return JsonResponse({'message': f'User {user_id} deleted successfully'})
-        except User.DoesNotExist:
-            return JsonResponse({'error': f'User with id {user_id} does not exist'}, status=404)
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+            livreur.delete()
+        except Exception as e:
+            print("ici")
+            print(f"Erreur : {e}")
+
+        return JsonResponse({'message': f'User {id_user} deleted successfully'})
+    except Exception as e:
+        print(e)
+   
  
 
 @api_view(['GET'])

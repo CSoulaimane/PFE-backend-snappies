@@ -70,7 +70,6 @@ def delete_client(request, id_client):
             client = Client.objects.get(id_client=id_client)
             
             commandes_client = Commande.objects.filter(client=client)
-
             for c in commandes_client:
                 for cc in Caisse_commande.objects.filter(commande=c):
                     cc.delete()

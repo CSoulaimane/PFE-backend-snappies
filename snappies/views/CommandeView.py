@@ -1,6 +1,7 @@
 
 
 import json
+from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 
@@ -124,6 +125,7 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
         commande_data = {
             'id_commande': commande.id_commande,
             'client': commande.client.name,
+            'client_adresse': commande.client.adresse,
             'default': commande.default,
             'est_modifie': commande.est_modifie,
             'articles': articles_commande,
@@ -317,7 +319,93 @@ def create_commande(request):
         
     except Exception as e:
         print(f"Erreur : {e}")
+
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_admin_commandes(request):
+    try:
+        user = request.user
+        if user.is_admin:
+            commands = Commande.objects.filter(default=True)
+
+            commands_data = []
+            for command in commands:
+                command_data = model_to_dict(command)
+                caisse_commandes = Caisse_commande.objects.filter(commande=command.id_commande)
+                articles_data = []
+
+                for caisse_commande in caisse_commandes:
+                    article_data = model_to_dict(caisse_commande.caisse.article)
+                    article_data['nbr_caisses'] = caisse_commande.nbr_caisses
+                    article_data['unite'] = caisse_commande.unite
+                    articles_data.append(article_data)
+
+                command_data['caisse_commandes'] = list(caisse_commandes.values())
+                command_data['articles'] = articles_data
+
+                commands_data.append(command_data)
+
+            return Response({'commands': commands_data})
+        else:
+            return Response({'error': 'You are not authorized to view admin commands'})
+    except Exception as e:
+        return Response({'error': str(e)})
     
-def display_hello_world(request):
-    message = { 'message': 'Hello World!' }
-    return HttpResponse(json.dumps(message))
+    
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_livreur_commandes(request):
+    try:
+        user = request.user
+        if not user.is_admin:
+            base_commands = Commande.objects.filter( default=True, est_modifie=False)
+            modified_commands = Commande.objects.filter( default=False, est_modifie=True)
+
+            commands_data = []
+            
+            # Ajouter les commandes de base
+            for base_command in base_commands:
+                command_data = model_to_dict(base_command)
+                caisse_commandes = Caisse_commande.objects.filter(commande=base_command.id_commande)
+                articles_data = []
+
+                for caisse_commande in caisse_commandes:
+                    article_data = model_to_dict(caisse_commande.caisse.article)
+                    article_data['nbr_caisses'] = caisse_commande.nbr_caisses
+                    article_data['unite'] = caisse_commande.unite
+                    articles_data.append(article_data)
+
+                command_data['caisse_commandes'] = list(caisse_commandes.values())
+                command_data['articles'] = articles_data
+
+                commands_data.append(command_data)
+
+            # Ajouter les commandes modifiées si elles existent
+            if modified_commands.exists():
+                modified_command = modified_commands.first()
+                command_data = model_to_dict(modified_command)
+                caisse_commandes = Caisse_commande.objects.filter(commande=modified_command.id_commande)
+                articles_data = []
+
+                for caisse_commande in caisse_commandes:
+                    article_data = model_to_dict(caisse_commande.caisse.article)
+                    article_data['nbr_caisses'] = caisse_commande.nbr_caisses
+                    article_data['unite'] = caisse_commande.unite
+                    articles_data.append(article_data)
+
+                command_data['caisse_commandes'] = list(caisse_commandes.values())
+                command_data['articles'] = articles_data
+
+                commands_data.append(command_data)
+
+            return Response({'commands': commands_data})
+        else:
+            return Response({'error': 'You are not authorized to view livreur commands'})
+    except Exception as e:
+        return Response({'error': str(e)})

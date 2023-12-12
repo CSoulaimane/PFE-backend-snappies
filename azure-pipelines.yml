@@ -41,8 +41,8 @@ stages:
         pip install -r requirements.txt
         pip install pytest
         
-    workingDirectory: $(projectRoot)
-    displayName: "Install requirements"
+      workingDirectory: $(projectRoot)
+      displayName: "Install requirements"
 
     - task: CmdLine@2
       inputs:

@@ -3,10 +3,10 @@ from django.urls import path
 from .views.CommandeView import create_commande
 from .views.CommandeView import get_commande
 from .views.CommandeView import get_commandes_tournee_admin,get_commandes_tournee_modifie_ou_non
-from .views.CommandeView import update_commande_admin
+from .views.CommandeView import update_commande_admin,update_livraison
 from .views.CommandeView import commande_livre
 
-from .views.LoginView import login
+from .views.LoginView import login,delete_user
 from .views.LoginView import getAll
 from .views.LoginView import create_user
 from .views.LoginView import logout_user
@@ -38,12 +38,14 @@ urlpatterns = [
     path('commande_livre/<commande_id>', commande_livre, name='commande livre'),
     path('get_commandes_tournee_admin/<id_tournee>', get_commandes_tournee_admin, name='get_commandes_tournee_admin'),
     path('get_commandes_tournee_modifie_ou_non/<id_tournee>', get_commandes_tournee_modifie_ou_non, name='get_commandes_tournee_modifie_ou_non'),
+    path('update_livraison/<id_commande>', update_livraison, name='ud'),
 
 
     
     path('loginUser', login , name='login_user'),
     path('getAllUsers', getAll, name='readall'),
     path('create', create_user, name='create_user'),
+    path('delete_user/<id_user>', delete_user, name='delete_user'),
     path('logout/<str:token>', logout_user , name="logout"),
     path('loadUserData', load_user_data , name="create client"),
     path('getAllLivreurs', get_all_livreurs , name="get_all_livreurs"),

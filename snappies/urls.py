@@ -4,7 +4,7 @@ from .views.CommandeView import create_commande
 from .views.CommandeView import get_commande
 from .views.CommandeView import get_commandes_tournee_admin,get_commandes_tournee_modifie_ou_non
 from .views.CommandeView import update_commande_admin,update_livraison
-from .views.CommandeView import commande_livre
+from .views.CommandeView import commande_livre,update_est_livre
 from .views.CommandeView import get_admin_commandes
 from .views.CommandeView import get_livreur_commandes
 
@@ -51,6 +51,7 @@ urlpatterns = [
     path('get_commandes_tournee_admin/<id_tournee>', get_commandes_tournee_admin, name='get_commandes_tournee_admin'),
     path('get_commandes_tournee_modifie_ou_non/<id_tournee>', get_commandes_tournee_modifie_ou_non, name='get_commandes_tournee_modifie_ou_non'),
     path('update_livraison/<id_commande>', update_livraison, name='ud'),
+    path('update_est_livre', update_est_livre, name='est livre'),
 
 
     

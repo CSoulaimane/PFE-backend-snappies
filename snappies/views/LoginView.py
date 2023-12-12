@@ -11,8 +11,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from ..models import User
-import pdb
+from ..models import User,Tournee
 
 # users/views.py
 
@@ -36,7 +35,9 @@ def create_user(request):
         return HttpResponse('error')
 
 
-
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_user(request, id_user):
     if request.method == 'DELETE':
         try:

@@ -38,38 +38,39 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
     "id_tournee": 1
 }
 
+### udpate livraison
+PATCH  http://localhost:8000/commande/update_livraison/59
+Content-Type: application/json
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
 
 ## token admin2 = 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 ##47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
 ### Update commande by id 
-PUT http://localhost:8000/commande/update_commande_admin/59
+PUT http://localhost:8000/commande/update_commande_admin/53
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-    "id_client": 8,
     "articles": [
         {
             "is_deleted": "false",
+            "is_created": "false",
             "id_article": 1,
-            "nbr_caisses": 5,
+            "nbr_caisses": 12,
             "unite": 0
         },
         {
             "is_deleted": "false",
+            "is_created": "false",
             "id_article": 4,
-            "nbr_caisses": 3,
+            "nbr_caisses": 10,
             "unite": 0
-        },
-        {
-            "is_deleted": "false",
-            "id_article": 5,
-            "nbr_caisses": 0,
-            "unite": 15
         }
-    ],
-    "id_tournee": 1
+      
+    ]
 }
 
 

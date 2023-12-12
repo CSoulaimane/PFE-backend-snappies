@@ -40,6 +40,7 @@ stages:
         pip install setup
         pip install -r requirements.txt
         pip install pytest
+        
       workingDirectory: $(projectRoot)
       displayName: "Install requirements"
 

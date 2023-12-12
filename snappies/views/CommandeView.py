@@ -183,11 +183,8 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
 
 
 
-    
-
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def commande_livre(request, commande_id):
     try:
         commande = Commande.objects.get(id_commande=commande_id)
@@ -198,9 +195,6 @@ def commande_livre(request, commande_id):
     commande.save()
 
     return JsonResponse({'message': f'Commande {commande_id} marquée comme livrée'})
-
-
-
 
 
 

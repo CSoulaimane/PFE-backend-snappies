@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
+from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from django.contrib.sessions.models import Session
 from django.utils import timezone
@@ -34,6 +35,29 @@ def create_user(request):
         return HttpResponse('error')
 
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_livreur(request):
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            is_admin = False  # Livreur is not an admin
+
+            # Check if the username is unique
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({'error': 'Username already exists'}, status=400)
+
+            # Create the user
+            user = User.objects.create_user(username=username, password=password, is_admin=is_admin)
+            user_data = {'id_user': user.id_user, 'username': user.username, 'is_admin': user.is_admin}
+
+            return JsonResponse(user_data, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+
+
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -47,6 +71,8 @@ def delete_user(request, id_user):
             return JsonResponse({'error': f'User with id {id_user} does not exist'}, status=404)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+ 
+
  
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
@@ -76,30 +102,45 @@ def update_livreur(request, id_user):
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
+
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_livreur(request, id_user):
-    user = request.user
-
     try:
-        user = User.objects.get(id=id_user)
-    except User.DoesNotExist:
-        return JsonResponse({'error': f'Utilisateur avec l\'id {id_user} n\'existe pas'}, status=404)
+        user = get_object_or_404(User, id_user=id_user, is_admin=False)
+        user_data = {'id_user': user.id_user, 'username': user.username}
 
-    if user.is_admin:
-        return JsonResponse({'error': 'Vous n\'avez pas le droit de supprimer un admin'})
-    elif user.is_livreur:
-        livreur = User.objects.get(id=id_user, is_admin=False)
-        livreur.delete()
-        return JsonResponse({'message': f'Livreur {livreur.username} supprimé avec succès'})
-    else:
-        return JsonResponse({'error': 'Vous pouvez seulement supprimer des livreurs'})
+        user.delete()  # Décommentez cette ligne pour supprimer réellement l'utilisateur
+        return HttpResponse(json.dumps(user_data), content_type='application/json')
+    except User.DoesNotExist:
+        return HttpResponse(json.dumps({'error': 'User not found'}), content_type="application/json", status=404)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return HttpResponse(json.dumps({'error': 'Internal Server Error'}), content_type="application/json", status=500)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user(request, id_user):
+    try:
+        livreurs = User.objects.filter( is_admin=False)
+        livreurs_data = [{'id_user': livreur.id_user, 'username': livreur.username} for livreur in livreurs]
+
+        user = get_object_or_404(User, id_user=id_user, is_admin=False)
+        user_data = {'id_user': user.id_user, 'username': user.username}
+
+        
+        
+        return HttpResponse(json.dumps(user_data), content_type='application/json')
+    except User.DoesNotExist:
+        return HttpResponse(json.dumps({'error': 'Invalid credentials'}), content_type="application/json", status=401)
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_all_livreurs(request):
+    print("eeeeeeeee")
     user= request.user
     if user.is_admin:
         # Filtrer les utilisateurs qui ne sont pas des administrateurs

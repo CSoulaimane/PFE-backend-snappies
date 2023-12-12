@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'django.contrib.sites',
+    'django.contrib.redirects'
 ]
 
 
@@ -60,7 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware', 
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
 ]
 
 ###    'django.middleware.csrf.CsrfViewMiddleware',

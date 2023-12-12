@@ -39,6 +39,9 @@ stages:
         python -m pip install --upgrade pip
         pip install setup
         pip install -r requirements.txt
+        pip install pytest
+        pytest tests.py
+
       workingDirectory: $(projectRoot)
       displayName: "Install requirements"
 

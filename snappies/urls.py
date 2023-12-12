@@ -16,6 +16,9 @@ from .views.LoginView import load_user_data
 from .views.LoginView import get_all_livreurs
 from .views.LoginView import delete_livreur
 from .views.LoginView import update_livreur
+from .views.LoginView import delete_user
+from .views.LoginView import get_user
+from .views.LoginView import create_livreur
 
 #from .views.LoginView import connected_users
 
@@ -58,8 +61,12 @@ urlpatterns = [
     path('logout/<str:token>', logout_user , name="logout"),
     path('loadUserData', load_user_data , name="create client"),
     path('getAllLivreurs', get_all_livreurs , name="get_all_livreurs"),
-    path('delete_livreur/<int:id_user>/', delete_livreur, name="delete_livreur"),
-    path('update_user/<int:id_user>/', update_livreur, name="update_livreur"),
+    path('delete_livreur/<id_user>', delete_livreur, name="delete_livreur"),
+    path('update_user/<id_user>', update_livreur, name="update_livreur"),
+    path('delete_user/<id_user>', delete_user, name="delete_user"),
+    path('get_user/<id_user>', get_user, name="get_user"),
+    path('create_livreur', create_livreur, name="create livreur"),
+
     #path('get_users_connected', connected_users , name="get_users_connected"),
     
     path('create_client', create_client , name="create client"),

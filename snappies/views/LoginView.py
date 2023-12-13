@@ -129,8 +129,6 @@ def get_user(request, id_user):
         user = get_object_or_404(User, id_user=id_user, is_admin=False)
         user_data = {'id_user': user.id_user, 'username': user.username}
 
-        
-        
         return HttpResponse(json.dumps(user_data), content_type='application/json')
     except User.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'Invalid credentials'}), content_type="application/json", status=401)

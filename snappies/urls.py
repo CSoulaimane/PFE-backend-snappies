@@ -34,6 +34,7 @@ from .views.TourneeView import get_commandes_tournee
 from .views.TourneeView import get_details_commandes_tournee
 from .views.TourneeView import get_tournees_livreur
 from .views.TourneeView import creer_tournee
+from .views.TourneeView import delete_tournee
 
 
 from .views.ArticleView import get_all_articles
@@ -81,6 +82,7 @@ urlpatterns = [
     path('<int:id_tournee>/commandes/details', get_details_commandes_tournee, name='get_details_commandes_tournee'),
     path('get_tournees_livreur/<username_livreur>', get_tournees_livreur, name='get_tournees_livreur'),
     path('creer_tournee', creer_tournee, name='creer_tournee'),
+    path('delete_tournee/<int:id_tournee>', delete_tournee, name='creer_tournee'),
 
 
     path('get_all_articles',get_all_articles, name ='get all article'),

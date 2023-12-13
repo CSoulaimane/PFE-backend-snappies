@@ -29,7 +29,26 @@ def creer_tournee(request):
     except Exception as e:
         return JsonResponse({'error': str(e)})
     
-    
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_tournee(request, id_tournee):
+    try:
+        user = request.user
+
+        if user.is_admin:
+            # Retrieve the tournee object or return 404 if not found
+            tournee = get_object_or_404(Tournee, id_tournee=id_tournee)
+
+            # Delete the tournee
+            tournee.delete()
+
+            return JsonResponse({'success': f'Tournee {id_tournee} deleted successfully'})
+        else:
+            return JsonResponse({'error': 'You are not authorized to delete a tournee'})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)})    
     
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])

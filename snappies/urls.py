@@ -89,5 +89,4 @@ urlpatterns = [
     path('delete_article/<id>',delete_article, name ='delete article'),
 
     ###path('delete/<int:user_id/', delete_user, name='delete_user'),
-
 ]

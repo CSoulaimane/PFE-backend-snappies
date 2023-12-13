@@ -22,9 +22,7 @@ def get_all_clients_free(request):
         try :
     
             clients_list = []
-            print("test")
             with connection.cursor() as cursor:
-                print("test")
                 cursor.execute("select cl.* from snappies_client cl where cl.id_client not in (select c.client_id from snappies_commande c)")
                 results = cursor.fetchall()
                 for row in results:

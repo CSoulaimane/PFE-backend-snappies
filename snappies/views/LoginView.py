@@ -116,7 +116,6 @@ def delete_livreur(request, id_user):
     except User.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'User not found'}), content_type="application/json", status=404)
     except Exception as e:
-        print(f"An error occurred: {e}")
         return HttpResponse(json.dumps({'error': 'Internal Server Error'}), content_type="application/json", status=500)
 
 @api_view(['GET'])
@@ -140,7 +139,6 @@ def get_user(request, id_user):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_all_livreurs(request):
-    print("eeeeeeeee")
     user= request.user
     if user.is_admin:
         # Filtrer les utilisateurs qui ne sont pas des administrateurs
@@ -164,16 +162,13 @@ def login(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
             username = data.get('username')
             password = data.get('password')
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
 
         User = get_user_model()
-        print(User)
         authenticate_user = authenticate(request, username=username , password=password)
-        print(authenticate_user)
         
         
 
@@ -189,7 +184,6 @@ def login(request):
                 role='livreur'
             
             request.session['username']= authenticate_user.get_username()
-            print("hey je suis connecte")
             response_data = {'message': 'Login is valid','username': username , 'role': role, 'token': token.key}
             
             if 'username' in request.session:

@@ -49,15 +49,27 @@ def get_all_clients_free(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_client(request):
+    user = request.user
+    
+    if user.is_admin:
+    
         data = json.loads(request.body)
         name = data.get('name')
         numero_telephone = data.get('numero_telephone')
         adresse = data.get('adresse')
-        client = Client(name=name, numero_telephone=numero_telephone , adresse=adresse)
-        client_data = {'name': client.name, 'numero_telephone': client.numero_telephone , 'adresse': client.adresse}
-
+        
+        client = Client(name=name, numero_telephone=numero_telephone, adresse=adresse)
         client.save()
+
+        client_data = {
+            'name': client.name,
+            'numero_telephone': client.numero_telephone,
+            'adresse': client.adresse
+        }
         return HttpResponse(json.dumps(client_data))
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -98,7 +110,32 @@ def delete_client(request, id_client):
         except Client.DoesNotExist:
             return JsonResponse({'error': f'Client with id {id_client} does not exist'}, status=404)
     
-    
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_all_clients(request):
+    user = request.user
+    if user.is_admin:
+        try:
+            clients_list = []
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM snappies_client")
+                results = cursor.fetchall()
+                for row in results:
+                    client = {
+                        'id': row[0],
+                        'client_nom': row[1],
+                        'telephone': row[2],
+                        'adresse': row[3],
+                        # Add other fields if necessary
+                    }
+                    clients_list.append(client)
+
+            return JsonResponse(clients_list, safe=False, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(status=status.HTTP_409_CONFLICT)    
     
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])

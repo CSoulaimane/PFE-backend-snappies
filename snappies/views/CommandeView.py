@@ -40,7 +40,7 @@ def get_commandes_tournee_admin(request,id_tournee):
             tournee = get_object_or_404(Tournee, id_tournee=id_tournee)
 
             # Récupérez toutes les commandes de la tournée avec les détails des articles
-            commandes_tournee = Commande.objects.filter(tournee=tournee,default=True).order_by('id_commande','est_livre')
+            commandes_tournee = Commande.objects.filter(tournee=tournee,default=True).order_by('id_commande','-est_livre')
             commandes_data = []
 
             for commande in commandes_tournee:
@@ -143,7 +143,7 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
                 )
                 
                 AND c.tournee_id=%s
-            ORDER BY c.est_livre, c.id_commande
+            ORDER BY c.est_livre desc, c.id_commande
         """       
         ,[id_tournee]
         )

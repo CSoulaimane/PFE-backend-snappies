@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### get all tournee 
 GET http://localhost:8000/tournee/get_all_tournee
-Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+Authorization: Token 44db761eccc9b9219360aaf66346cf5a6a1cffda
 
 ###
 GET http://localhost:8000/tournee/get_tournees_livreur/ronaldo

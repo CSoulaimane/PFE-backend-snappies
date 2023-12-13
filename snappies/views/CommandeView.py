@@ -61,6 +61,7 @@ def get_commandes_tournee_admin(request,id_tournee):
                     'id_commande_modifie': commande_modif.id_commande,
                     'client': commande.client.name,
                     'client_adresse':commande.client.adresse,
+                    'est_livre' : commande.est_livre,
                     'default': commande.default,
                     'est_modifie': commande.est_modifie,
                     'articles': articles_commande,

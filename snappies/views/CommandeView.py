@@ -78,26 +78,28 @@ def get_commandes_tournee_admin(request,id_tournee):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_livraison(request,id_commande):
-    
+    print("ee")
+    user  = request.user
     try:
+        if user.is_not_admin :
         # Vérifiez si l'utilisateur est un livreur (non-administrateur)
-        commande = Commande.objects.get(id_commande=id_commande)
-        print(commande.default)
-        if commande.default == True:
-            commande.est_livre=True
-            commande.est_modifie=False
-            commande_modif = Commande.objects.get(client=commande.client,default=False)
-            commande_modif.est_modifie=False
-            commande_modif.save()
-            commande.save()
-        else:
-            commande.est_modifie=False
-            commande_default=Commande.objects.get(client=commande.client,default=True)
-            commande_default.est_livre=True
-            commande_default.est_modifie=False
-            commande_default.save()
+            commande = Commande.objects.get(id_commande=id_commande)
+            print(commande.default)
+            if commande.default == True:
+                commande.est_livre=True
+                commande.est_modifie=False
+                commande_modif = Commande.objects.get(client=commande.client,default=False)
+                commande_modif.est_modifie=False
+                commande_modif.save()
+                commande.save()
+            else:
+                commande.est_modifie=False
+                commande_default=Commande.objects.get(client=commande.client,default=True)
+                commande_default.est_livre=True
+                commande_default.est_modifie=False
+                commande_default.save()
 
-        return Response({"modifie" : "true"},status=status.HTTP_200_OK)
+            return Response({"modifie" : "true"},status=status.HTTP_200_OK)
     
     except Exception as e:
         print("ici" , e)

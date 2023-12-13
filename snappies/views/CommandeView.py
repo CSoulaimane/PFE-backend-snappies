@@ -78,7 +78,7 @@ def get_commandes_tournee_admin(request,id_tournee):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_livraison(request,id_commande):
-    print("ee")
+    
     try:
         # Vérifiez si l'utilisateur est un livreur (non-administrateur)
         commande = Commande.objects.get(id_commande=id_commande)

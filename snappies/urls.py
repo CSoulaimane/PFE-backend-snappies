@@ -27,6 +27,7 @@ from .views.ClientView import delete_client
 from .views.ClientView import update_client
 from .views.ClientView import get_all_clients_free
 from .views.ClientView import get_client
+from .views.ClientView import get_all_clients
 
 from .views.TourneeView import assigner_tournee
 from .views.TourneeView import get_all_tournees
@@ -75,6 +76,7 @@ urlpatterns = [
     path('update_client/<id_client>', update_client , name="update client"),
     path('get_all_clients_free', get_all_clients_free , name="get_all_clients_free"),
     path('get_client/<int:id_client>', get_client , name="get_client"),
+    path('get_all_clients', get_all_clients , name="get_all_clients"),
 
     path('assigner_tournee/<id_tournee>', assigner_tournee , name="assigner_tournee"),
     path('get_all_tournee', get_all_tournees , name="get all tournee"),

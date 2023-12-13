@@ -8,7 +8,12 @@ Authorization: Token 9d01d030a6da461a84079fc13c2f3d1895c8f068
 
 
 ###
-GET http://localhost:8000/commande/get_commandes_tournee_modifie_ou_non/1
+GET http://localhost:8000/commande/get_commandes_tournee_admin/12
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+
+
+###
+GET http://localhost:8000/commande/get_commandes_tournee_modifie_ou_non/16
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
@@ -40,9 +45,9 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 }
 
 ### udpate livraison
-PATCH  http://localhost:8000/commande/update_livraison/59
+PATCH  http://localhost:8000/commande/update_livraison/58
 Content-Type: application/json
-Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
+Authorization: Token 47cf7bb92dbfa2649aa20fd3ff1fa82de9a94771
 
 ### udpate livraison
 PATCH  http://localhost:8000/commande/update_est_livre
@@ -77,11 +82,6 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
     ]
 }
 
-
-
-
-
-
 ###
 GET http://localhost:8000/commande/getAll
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
@@ -106,8 +106,9 @@ GET http://localhost:8000/commande/getOne/1
 
 
 ### Marquer la commande 1 comme livré
-PUT http://localhost:8000/commande/commande_livre/1
+PUT http://localhost:8000/commande/commande_livre/70
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {}
+

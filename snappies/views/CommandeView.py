@@ -80,7 +80,7 @@ def get_commandes_tournee_admin(request,id_tournee):
 def update_livraison(request,id_commande):
     user  = request.user
     try:
-        if user.is_not_admin :
+        if not user.is_admin :
         # Vérifiez si l'utilisateur est un livreur (non-administrateur)
             commande = Commande.objects.get(id_commande=id_commande)
             if commande.default == True:
@@ -100,7 +100,6 @@ def update_livraison(request,id_commande):
             return Response({"modifie" : "true"},status=status.HTTP_200_OK)
     
     except Exception as e:
-        print("ici" , e)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -120,7 +119,6 @@ def update_est_livre(request):
         return Response({"est_livre" : "maitenant à false"},status=status.HTTP_200_OK)
     
     except Exception as e:
-        print("ici" , e)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -354,6 +352,7 @@ def create_commande(request):
             commandeDefaut.save()
             commandeModifie.save()
         
+
             tab_articles = []
             data_created = {"commandeDefaut":{"id_commande" : commandeDefaut.id_commande,"id_client":id_client, "articles":tab_articles },
                             "commandeModifie":{"id_commande" : commandeModifie.id_commande,"id_client":id_client ,"articles": tab_articles } }

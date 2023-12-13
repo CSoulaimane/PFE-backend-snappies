@@ -7,6 +7,9 @@ GET http://localhost:8000/client/get_client/1
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 
+###
+GET http://localhost:8000/client/get_all_clients
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 ### Créer un client 
 POST http://localhost:8000/client/create_client
@@ -14,24 +17,24 @@ Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "name": "client 3",
-  "numero_telephone": "04214763333",  
-  "adresse": "chausse d'anvers"
+  "nom": "azazeaze",
+  "numero_telephone": "1234567890",
+  "adresse": "Rue du babababa"
 }
 
 ### delete client
-DELETE http://localhost:8000/client/delete_client/2
+DELETE http://localhost:8000/client/delete_client/10
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 ### Mettre à jour un client
-PUT http://localhost:8000/client/update_client/1
+PUT http://localhost:8000/client/update_client/16
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-  "name": "nouveau nom",
-  "numero_telephone": "9999999",  
-  "adresse": "nouvelle adresse"
+  "name": "updated client hehehe",
+  "numero_telephone": "12",  
+  "adresse": "nouvelle adresse mis a jour"
 }
 
 

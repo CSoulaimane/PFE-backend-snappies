@@ -2,7 +2,7 @@
 
 ### get all articles
 GET http://localhost:8000/articles/get_all_articles
-Authorization: Token 9d01d030a6da461a84079fc13c2f3d1895c8f068
+Authorization: Token 44db761eccc9b9219360aaf66346cf5a6a1cffda
 
 
 ### get all articles

@@ -18,7 +18,6 @@ def get_all_articles(request):
         user = request.user
         if user.is_admin:
             caisses = Caisse.objects.all()
-            print("test")
             tournees_data = [{ 'id_caisse': c.id_caisse,'article': c.article.id_article, 'nom': c.article.nom ,'taille': c.article.taille,
                                'type': c.article.types, 'nbr_articles': c.nbr_articles } for c in caisses]
             return HttpResponse(json.dumps(tournees_data), content_type='application/json')
@@ -90,11 +89,9 @@ def delete_article(request, id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_article(request, id):
-    print("test")
     user = request.user
     if user.is_admin:
         try:
-            print("test")
             article = Article.objects.get(id_article=id)  
             caisse = Caisse.objects.get(article=article)
 

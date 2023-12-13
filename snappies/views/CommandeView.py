@@ -54,9 +54,11 @@ def get_commandes_tournee_admin(request,id_tournee):
                     'quantite_caisse': float(caisse_commande.nbr_caisses),
                     'quantite_unite': int(caisse_commande.unite),
                 } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
-
+                print(commande)
+                commande_modif = Commande.objects.get(client=commande.client,default=False)
                 commande_data = {
                     'id_commande': commande.id_commande,
+                    'id_commande_modifie': commande_modif.id_commande,
                     'client': commande.client.name,
                     'client_adresse':commande.client.adresse,
                     'default': commande.default,

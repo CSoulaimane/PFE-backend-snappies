@@ -9,6 +9,9 @@ Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
   "nom": "Tournee de Laeken"
 }
 
+### delete tournee
+DELETE http://localhost:8000/tournee/delete_tournee/7
+Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 ### assigner la tournee 2 a Ronaldo (id = 5)
 POST http://localhost:8000/tournee/assigner_tournee/2

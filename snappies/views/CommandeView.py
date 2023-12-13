@@ -54,7 +54,6 @@ def get_commandes_tournee_admin(request,id_tournee):
                     'quantite_caisse': float(caisse_commande.nbr_caisses),
                     'quantite_unite': int(caisse_commande.unite),
                 } for caisse_commande in Caisse_commande.objects.filter(commande=commande)]
-                print(commande)
                 commande_modif = Commande.objects.get(client=commande.client,default=False)
                 commande_data = {
                     'id_commande': commande.id_commande,
@@ -79,13 +78,11 @@ def get_commandes_tournee_admin(request,id_tournee):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_livraison(request,id_commande):
-    print("ee")
     user  = request.user
     try:
         if user.is_not_admin :
         # Vérifiez si l'utilisateur est un livreur (non-administrateur)
             commande = Commande.objects.get(id_commande=id_commande)
-            print(commande.default)
             if commande.default == True:
                 commande.est_livre=True
                 commande.est_modifie=False
@@ -132,9 +129,7 @@ def update_est_livre(request):
 @permission_classes([IsAuthenticated])
 def get_commandes_tournee_modifie_ou_non(request,id_tournee):
 
-    print("test")
     with connection.cursor() as cursor:
-        print("test")
         cursor.execute(
             """
             SELECT 
@@ -156,7 +151,6 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
         
         rows = cursor.fetchall()
         id_list = [row[0] for row in rows]
-        print(id_list )
 
     commandes_tournee =[]
     commandes_data = []
@@ -193,7 +187,6 @@ def get_commandes_tournee_modifie_ou_non(request,id_tournee):
         if(commande.default == True):
             client = Client.objects.get(id_client=commande.client.id_client)
             commande_modifie = Commande.objects.get(client=client,default=False)
-            print("sss")
             commande_data["id_commande"]=commande_modifie.id_commande
 
         commandes_data.append(commande_data)
@@ -228,10 +221,7 @@ def update_commande_admin(request, id_commande):
     if user.is_admin:
         try:
             data = json.loads(request.body)
-            print("ici")
             articles = data["articles"]
-            print("ici")
-
 
             commande = Commande.objects.get(id_commande=id_commande)
             client = commande.client
@@ -239,7 +229,6 @@ def update_commande_admin(request, id_commande):
 
             # syncronsier commande par defaut et modifie
             if commande.default == True:
-                print("laaaaaaaaaaaa")
                 commande_modifie = Commande.objects.get(client=commande.client,default=False)    
                 with connection.cursor() as cursor:
                     # Créer un tuple d'arguments pour la requête SQL
@@ -267,11 +256,9 @@ def update_commande_admin(request, id_commande):
                     )
                     rows = cursor.fetchall()
                     list_caisse_commandes_id = [row[0] for row in rows]
-                    print("iciiiii", list_caisse_commandes_id) 
                 for id in list_caisse_commandes_id:
                     c = Caisse_commande.objects.get(id_caisse_commande=id)
                     c.delete()
-                    print("supprimer")
 
             #mettre a jour les infos pour dire que la commande d un client a ete modifie temporairement
             if commande.default == False:
@@ -286,32 +273,24 @@ def update_commande_admin(request, id_commande):
 
 
             for a in articles:
-                print("teststddd",a)
                 article = Article.objects.get(id_article=a["id_article"])
                 caisse = Caisse.objects.get(article=article)
                 if a["is_created"] != "true":
-                    print("is_created")
                     caisse_commande = Caisse_commande.objects.get(commande=commande,caisse=caisse)
                 if commande.default == True and a["is_created"] != "true" :
-                    print("testst")
                     commande_modifie = Commande.objects.get(client=client,default=False)
                     caisse_commande_modifie =Caisse_commande.objects.filter(commande=commande_modifie,caisse=caisse)
                     if caisse_commande_modifie.exists and len(caisse_commande_modifie) > 0:
-                        print("ici : ",caisse_commande_modifie)
                         caisse_commande_modifie = caisse_commande_modifie[0]
-                        print(caisse_commande_modifie)
                     else:
                         caisse_commande_modifie= Caisse_commande(caisse=caisse,commande=commande_modifie,nbr_caisses=caisse_commande.nbr_caisses,unite=caisse_commande.unite)
                         caisse_commande_modifie.save()
-                        print(caisse_commande_modifie)
 
                 if  a["is_deleted"] == "true":
-                    print("deleted")
                     caisse_commande.delete()
                     if commande.default == True:
                         caisse_commande_modifie.delete()
                 elif a["is_created"] == "true":
-                    print("creteeed")
                     if commande.default == True:
                         new_caisse_commande = Caisse_commande(commande=commande,caisse=caisse,nbr_caisses=a["nbr_caisses"],unite=a["unite"])
                         new_caisse_commande_modifie = Caisse_commande(commande=commande_modifie,caisse=caisse,nbr_caisses=a["nbr_caisses"],unite=a["unite"])
@@ -324,7 +303,6 @@ def update_commande_admin(request, id_commande):
                                         "nbr_caisses":float(new_caisse_commande.nbr_caisses),
                                         "unite":new_caisse_commande.unite })                    
                 elif a["unite"] != 0:
-                    print("unite")
                     caisse_commande.unite = a["unite"]
                     caisse_commande.save()
                     if commande.default == True:
@@ -334,7 +312,6 @@ def update_commande_admin(request, id_commande):
                                         "nbr_caisses":float(caisse_commande.nbr_caisses),
                                         "unite":caisse_commande.unite })
                 else:
-                    print("nbr_caisses")
                     caisse_commande.nbr_caisses = a["nbr_caisses"]
                     caisse_commande.save()
                     if commande.default == True:
@@ -372,18 +349,11 @@ def create_commande(request):
                 return Response(status=status.HTTP_404_NOT_FOUND)
             
             
-            print("eddd")
             commandeDefaut = Commande(tournee_id=id_tournee, client_id=id_client, default=True, est_modifie=False, est_livre=False)
-            print("mlm")
             commandeModifie = Commande(tournee_id=id_tournee, client_id=id_client, default=False, est_modifie=False, est_livre=False)
-            print("defaut ", commandeDefaut)
-            print("modifie ", commandeModifie)
             commandeDefaut.save()
             commandeModifie.save()
         
-            print("apres defaut " , commandeDefaut)
-            print("apres modifie ", commandeModifie)
-
             tab_articles = []
             data_created = {"commandeDefaut":{"id_commande" : commandeDefaut.id_commande,"id_client":id_client, "articles":tab_articles },
                             "commandeModifie":{"id_commande" : commandeModifie.id_commande,"id_client":id_client ,"articles": tab_articles } }

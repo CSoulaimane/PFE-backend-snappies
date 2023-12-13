@@ -29,7 +29,6 @@ def create_user(request):
         user.save()
         
         authenticate_user = authenticate(request, username=username , password=password)
-        print(authenticate_user)
         return HttpResponse(json.dumps(user_data))
     else:
         return HttpResponse('error')

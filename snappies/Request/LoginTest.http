@@ -10,14 +10,31 @@ Content-Type: application/json
 }
 
 
+### login an user
+POST http://localhost:8000/login/loginUser
+Content-Type: application/json
+
+{
+    "username": "souli_livreur",
+    "password": "123"
+}
+
+### login an user
+POST http://localhost:8000/login/loginUser
+Content-Type: application/json
+
+{
+    "username": "souli_admin",
+    "password": "123"
+}
 ### create a livreur
 POST http://localhost:8000/login/create_livreur
 Content-Type: application/json
 Authorization: Token 0aa1967b91c4c1232cf87c8c6373a035d08255d2
 
 {
-    "username": "Neymar",
-    "password": "aze"
+    "username": "testtttttttttttttttttt",
+    "password": "123"
 }
 
 ###
